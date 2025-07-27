@@ -73,7 +73,7 @@ export default function ContactSection() {
                                         {Array.from({ length: 50 }, (_, i) => (
                                                 <div key={i} className="mb-2">
                                                         {`const developer = {
-  name: "Your Name",
+  name: "Aariz Sheikh",
   skills: ["React", "Node.js", "TypeScript"],
   passion: "Building amazing experiences",
   availability: "Open to opportunities"

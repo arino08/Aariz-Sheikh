@@ -15,7 +15,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-        title: "Developer's Terminal | Portfolio",
+        title: "Aariz's Terminal | Portfolio",
         description:
                 "A stunning portfolio showcasing development projects through an interactive terminal-themed experience",
         keywords: [
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
                 "next.js",
                 "3d",
         ],
-        authors: [{ name: "Your Name" }],
+        authors: [{ name: "Aariz Sheikh" }],
 };
 
 export const viewport = {
