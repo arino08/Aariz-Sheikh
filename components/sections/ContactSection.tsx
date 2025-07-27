@@ -334,8 +334,9 @@ async function connectWithDeveloper() {
                                                 <div className="mb-2">
                                                         <span className="text-[var(--code-comment)]">
                                                                 {" "}
-                                                                * © 2025 Aariz Sheikh. All rights
-                                                                reserved.
+                                                                * © 2025 Aariz
+                                                                Sheikh. All
+                                                                rights reserved.
                                                         </span>
                                                 </div>
                                                 <div>

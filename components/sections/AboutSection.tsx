@@ -165,7 +165,8 @@ export default function AboutSection() {
                                                                                 :
                                                                         </span>{" "}
                                                                         <span className="text-[var(--terminal-green)]">
-                                                                                &quot;Aariz Sheikh&quot;
+                                                                                &quot;Aariz
+                                                                                Sheikh&quot;
                                                                         </span>
                                                                         <span className="text-white">
                                                                                 ,
@@ -254,7 +255,8 @@ export default function AboutSection() {
                                                                         <span className="text-[var(--terminal-green)]">
                                                                                 &quot;React,
                                                                                 Next.js,
-                                                                                Node.js, GenAI&quot;
+                                                                                Node.js,
+                                                                                GenAI&quot;
                                                                         </span>
                                                                 </div>
                                                         </div>

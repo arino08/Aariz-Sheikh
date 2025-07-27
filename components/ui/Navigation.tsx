@@ -7,13 +7,16 @@ export default function Navigation() {
         const [isScrolled, setIsScrolled] = useState(false);
         const [scrollProgress, setScrollProgress] = useState(0);
 
-        const sections = useMemo(() => [
-                { id: "hero", label: "Terminal" },
-                { id: "about", label: "About" },
-                { id: "skills", label: "Skills" },
-                { id: "projects", label: "Projects" },
-                { id: "contact", label: "Contact" },
-        ], []);
+        const sections = useMemo(
+                () => [
+                        { id: "hero", label: "Terminal" },
+                        { id: "about", label: "About" },
+                        { id: "skills", label: "Skills" },
+                        { id: "projects", label: "Projects" },
+                        { id: "contact", label: "Contact" },
+                ],
+                []
+        );
 
         useEffect(() => {
                 const handleScroll = () => {

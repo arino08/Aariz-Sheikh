@@ -63,15 +63,14 @@ export const create = mutation({
         },
         {
                 id: "project-2",
-                title: "Graylour E-Commerce",
+                title: "Graylour",
                 description:
-                        "A sleek e-commerce storefront for a fictional clothing brand, featuring a headless CMS with Sanity and secure payment processing via Stripe.",
+                        "A sleek web app that converts grayscale images to vibrant colors using advance AI techniques adn authentication giving storage solutions, with high privacy as data is stored locally, therefore no data is sent to the server",
                 techStack: [
                         "Next.js",
                         "React",
-                        "Sanity",
-                        "Stripe",
                         "Tailwind CSS",
+                        "Replicate",
                 ],
                 liveUrl: "https://graylour.vercel.app", // Replace with your live URL
                 codeUrl: "https://github.com/arino08/Graylour",
@@ -99,7 +98,7 @@ export async function POST(request: Request) {
                 id: "project-3",
                 title: "Arzion Lore",
                 description:
-                        "An immersive, animation-rich website to explore the lore of the Arzion universe, built with a focus on fluid user experience using Framer Motion.",
+                        "An immersive, animation-rich website to explore the lore of the Arzion universe, built with focus on fluid user experience and letting user write their imaginations with extensive features provided by markdown emulation and live view count.",
                 techStack: [
                         "Next.js",
                         "React",
@@ -301,12 +300,16 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                                                                         <div
                                                                                 style={{
                                                                                         backgroundImage: `url(${project.image})`,
-                                                                                        backgroundSize: 'cover',
-                                                                                        backgroundPosition: 'center'
+                                                                                        backgroundSize:
+                                                                                                "cover",
+                                                                                        backgroundPosition:
+                                                                                                "center",
                                                                                 }}
                                                                                 className="w-full h-full rounded-lg"
                                                                                 role="img"
-                                                                                aria-label={project.title}
+                                                                                aria-label={
+                                                                                        project.title
+                                                                                }
                                                                         />
                                                                 ) : (
                                                                         <div className="text-white text-2xl sm:text-4xl">
