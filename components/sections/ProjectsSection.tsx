@@ -3,7 +3,6 @@
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -272,8 +271,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                                                         className="h-full"
                                                 >
                                                         <h3 className="font-mono text-sm text-[var(--code-comment)] mb-4">
-                                                                // Project
-                                                                compilation
+                                                                {/* Project compilation */}
                                                         </h3>
                                                         <pre className="font-mono text-xs leading-relaxed text-gray-300 overflow-auto h-full">
                                                                 <code>
@@ -300,14 +298,15 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                                                         <div className="aspect-video bg-gradient-to-br from-[var(--terminal-purple)] to-[var(--terminal-blue)] rounded-lg flex items-center justify-center overflow-hidden">
                                                                 {/* Use actual project image if available */}
                                                                 {project.image ? (
-                                                                        <img
-                                                                                src={
-                                                                                        project.image
-                                                                                }
-                                                                                alt={
-                                                                                        project.title
-                                                                                }
-                                                                                className="w-full h-full object-cover rounded-lg"
+                                                                        <div
+                                                                                style={{
+                                                                                        backgroundImage: `url(${project.image})`,
+                                                                                        backgroundSize: 'cover',
+                                                                                        backgroundPosition: 'center'
+                                                                                }}
+                                                                                className="w-full h-full rounded-lg"
+                                                                                role="img"
+                                                                                aria-label={project.title}
                                                                         />
                                                                 ) : (
                                                                         <div className="text-white text-2xl sm:text-4xl">
@@ -473,7 +472,7 @@ export default function ProjectsSection() {
                         {/* Section Header */}
                         <div className="text-center py-20 px-4">
                                 <h2 className="font-mono text-[var(--code-comment)] text-lg mb-2">
-                                        // The Repositories
+                                        {/* The Repositories */}
                                 </h2>
                                 <h3 className="text-4xl md:text-6xl font-bold">
                                         <span className="text-[var(--terminal-green)]">

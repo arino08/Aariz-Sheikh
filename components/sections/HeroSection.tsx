@@ -95,7 +95,7 @@ export default function HeroSection() {
 
                                         <div className="font-mono text-sm md:text-base text-[var(--code-comment)] max-w-2xl mx-auto">
                                                 <span className="text-[var(--code-keyword)]">
-                                                        /**
+                                                        {/* /** */}
                                                 </span>
                                                 <br />
                                                 <span className="text-[var(--code-comment)]">

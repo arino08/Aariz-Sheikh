@@ -374,7 +374,7 @@ export default function SkillsSection() {
                                 {/* Section Header */}
                                 <div className="text-center mb-16">
                                         <h2 className="font-mono text-[var(--code-comment)] text-lg mb-2">
-                                                // The Tech Stack
+                                                {/* The Tech Stack */}
                                         </h2>
                                         <h3 className="text-4xl md:text-6xl font-bold">
                                                 <span className="text-[var(--terminal-purple)]">
@@ -473,9 +473,7 @@ export default function SkillsSection() {
                                                 </span>
                                                 <br />
                                                 <span className="text-[var(--code-comment)]">
-                                                        // Always exploring new
-                                                        technologies and best
-                                                        practices
+                                                        {/* Always exploring new technologies and best practices */}
                                                 </span>
                                         </div>
                                 </div>

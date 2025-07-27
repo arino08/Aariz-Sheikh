@@ -3,7 +3,6 @@
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Image from "next/image";
 
 // Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
@@ -72,7 +71,7 @@ export default function AboutSection() {
                                 {/* Section Header */}
                                 <div className="text-center mb-16">
                                         <h2 className="font-mono text-[var(--code-comment)] text-lg mb-2">
-                                                // The Commit Log
+                                                {/* The Commit Log */}
                                         </h2>
                                         <h3 className="text-4xl md:text-6xl font-bold">
                                                 <span className="text-[var(--terminal-green)]">
@@ -118,7 +117,7 @@ export default function AboutSection() {
                                         >
                                                 <div className="font-mono text-sm md:text-base leading-relaxed">
                                                         <div className="text-[var(--code-keyword)]">
-                                                                /**
+                                                                {/* /** */}
                                                         </div>
                                                         <div className="text-[var(--code-comment)] pl-2">
                                                                 * Full-Stack

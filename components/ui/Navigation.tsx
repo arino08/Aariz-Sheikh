@@ -1,19 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 export default function Navigation() {
         const [activeSection, setActiveSection] = useState("hero");
         const [isScrolled, setIsScrolled] = useState(false);
         const [scrollProgress, setScrollProgress] = useState(0);
 
-        const sections = [
+        const sections = useMemo(() => [
                 { id: "hero", label: "Terminal" },
                 { id: "about", label: "About" },
                 { id: "skills", label: "Skills" },
                 { id: "projects", label: "Projects" },
                 { id: "contact", label: "Contact" },
-        ];
+        ], []);
 
         useEffect(() => {
                 const handleScroll = () => {
@@ -71,7 +71,7 @@ export default function Navigation() {
                                 );
                         }
                 };
-        }, []);
+        }, [sections]);
 
         const scrollToSection = (sectionId: string) => {
                 if (typeof window !== "undefined") {

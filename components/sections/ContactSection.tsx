@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -10,7 +10,6 @@ export default function ContactSection() {
         const sectionRef = useRef<HTMLDivElement>(null);
         const contentRef = useRef<HTMLDivElement>(null);
         const backgroundRef = useRef<HTMLDivElement>(null);
-        const [isVisible, setIsVisible] = useState(false);
 
         useEffect(() => {
                 const section = sectionRef.current;
@@ -35,7 +34,6 @@ export default function ContactSection() {
                                 trigger: section,
                                 start: "top 80%",
                                 onEnter: () => {
-                                        setIsVisible(true);
                                         gsap.fromTo(
                                                 content,
                                                 { opacity: 0, y: 50 },
@@ -101,11 +99,11 @@ async function connectWithDeveloper() {
                                 {/* Header */}
                                 <div className="mb-12">
                                         <h2 className="font-mono text-[var(--code-comment)] text-lg mb-2">
-                                                // get_in_touch()
+                                                {/* get_in_touch() */}
                                         </h2>
                                         <h3 className="text-4xl md:text-6xl font-bold mb-6">
                                                 <span className="text-[var(--terminal-green)]">
-                                                        Let's
+                                                        Let&apos;s
                                                 </span>{" "}
                                                 <span className="text-[var(--terminal-blue)]">
                                                         Connect
@@ -113,7 +111,7 @@ async function connectWithDeveloper() {
                                         </h3>
                                         <p className="text-[var(--code-comment)] max-w-2xl mx-auto leading-relaxed">
                                                 Ready to bring your ideas to
-                                                life? I'm always excited to
+                                                life? I&apos;m always excited to
                                                 collaborate on innovative
                                                 projects and discuss new
                                                 opportunities.
@@ -278,14 +276,14 @@ async function connectWithDeveloper() {
                                 <div className="mt-12 space-y-6">
                                         <div className="font-mono text-sm text-[var(--code-comment)]">
                                                 <span className="text-[var(--code-keyword)]">
-                                                        //{" "}
+                                                        {/* // */}{" "}
                                                 </span>
                                                 Ready to start a conversation?
                                         </div>
 
                                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                                                 <a
-                                                        href={`mailto:${contactInfo.email}?subject=Let's work together`}
+                                                        href={`mailto:${contactInfo.email}?subject=Let&apos;s work together`}
                                                         className="group font-mono bg-[var(--terminal-green)] text-[#0D1117] px-8 py-4 rounded-lg hover:bg-[var(--terminal-green)]/80 transition-all duration-300 transform hover:scale-105"
                                                 >
                                                         <span className="group-hover:hidden">
@@ -321,7 +319,7 @@ async function connectWithDeveloper() {
                                         <div className="font-mono text-xs text-[var(--code-comment)]">
                                                 <div className="mb-2">
                                                         <span className="text-[var(--code-keyword)]">
-                                                                /**
+                                                                {/* /** */}
                                                         </span>
                                                 </div>
                                                 <div className="mb-2">
@@ -336,14 +334,12 @@ async function connectWithDeveloper() {
                                                 <div className="mb-2">
                                                         <span className="text-[var(--code-comment)]">
                                                                 {" "}
-                                                                * © 2024 Your
-                                                                Name. All rights
+                                                                * © 2025 Aariz Sheikh. All rights
                                                                 reserved.
                                                         </span>
                                                 </div>
                                                 <div>
                                                         <span className="text-[var(--code-keyword)]">
-                                                                {" "}
                                                                 */
                                                         </span>
                                                 </div>
