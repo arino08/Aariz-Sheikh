@@ -118,14 +118,14 @@ export default function HeroSection() {
                                 </div>
 
                                 {/* Scroll indicator */}
-                                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+                                <div className="absolute bottom-8 left-1/2 transform justify-center items-center text-center align-center">
                                         <div className="animate-bounce">
-                                                <div className="w-6 h-10 border-2 border-[var(--terminal-green)] rounded-full flex justify-center">
+                                                <div className="w-6 h-10 border-2 border-[var(--terminal-green)] rounded-full flex justify-center align-center">
                                                         <div className="w-1 h-3 bg-[var(--terminal-green)] rounded-full mt-2 animate-pulse"></div>
                                                 </div>
                                         </div>
-                                        <p className="font-mono text-xs text-[var(--code-comment)] mt-2">
-                                                scroll
+                                        <p className="font-mono text-xs text-[var(--code-comment)] mt-2 text-center w-full mx-auto">
+                                                
                                         </p>
                                 </div>
                         </div>
