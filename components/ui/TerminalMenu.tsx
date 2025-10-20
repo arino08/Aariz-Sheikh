@@ -30,6 +30,7 @@ export default function TerminalMenu({ isOpen, onClose, onNavigate }: TerminalMe
   const [morphedTexts, setMorphedTexts] = useState<Record<number, string>>({});
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [showLoadingMessage, setShowLoadingMessage] = useState(false);
 
   const terminalRef = useRef<HTMLDivElement>(null);
   const navLinksRef = useRef<HTMLDivElement>(null);
@@ -212,15 +213,36 @@ export default function TerminalMenu({ isOpen, onClose, onNavigate }: TerminalMe
     setSelectedItem(item.id);
     setStage('navigating');
 
-    // Start reverse morphing animation for all links
+    // Start reverse morphing animation for all links (staggered)
     navigationItems.forEach((navItem, index) => {
       setTimeout(() => {
         reverseMorphText(navItem.number, navItem.label);
       }, index * 100);
     });
 
-    // Expand to full screen with matrix effect after reverse morph starts
+    // Calculate total reverse morph time:
+    // - Last link starts at: (navigationItems.length - 1) * 100ms
+    // - Reverse morph duration: 15 iterations * 50ms = 750ms
+    // - Total: ~1150ms
+    const reverseMorphDuration = (navigationItems.length - 1) * 100 + 750;
+
+    // Fade out all navigation links after reverse morph completes
     setTimeout(() => {
+      if (navLinksRef.current) {
+        gsap.to(navLinksRef.current, {
+          opacity: 0,
+          y: -20,
+          duration: 0.3,
+          ease: 'power2.in',
+        });
+      }
+    }, reverseMorphDuration);
+
+    // Show loading message AFTER links disappear
+    const loadingOverlayDelay = reverseMorphDuration + 300; // Add 300ms for fade out
+
+    setTimeout(() => {
+      setShowLoadingMessage(true);
       setIsFullScreen(true);
       if (terminalRef.current) {
         gsap.to(terminalRef.current, {
@@ -233,7 +255,7 @@ export default function TerminalMenu({ isOpen, onClose, onNavigate }: TerminalMe
           ease: 'power3.inOut',
         });
       }
-    }, 300);
+    }, loadingOverlayDelay);
 
     // After fullscreen transition, navigate and fade out matrix
     setTimeout(() => {
@@ -245,7 +267,7 @@ export default function TerminalMenu({ isOpen, onClose, onNavigate }: TerminalMe
           onClose();
         }, 800);
       }, 1000);
-    }, 2500);
+    }, loadingOverlayDelay + 1000);
   };
 
   // Reverse morph: text back to random characters
@@ -290,6 +312,7 @@ export default function TerminalMenu({ isOpen, onClose, onNavigate }: TerminalMe
     setMorphedTexts({});
     setSelectedItem(null);
     setIsFullScreen(false);
+    setShowLoadingMessage(false);
 
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
@@ -412,7 +435,7 @@ export default function TerminalMenu({ isOpen, onClose, onNavigate }: TerminalMe
           )}
 
           {/* Navigation Loading State */}
-          {stage === 'navigating' && selectedItem && !isFullScreen && (
+          {stage === 'navigating' && selectedItem && showLoadingMessage && !isFullScreen && (
             <div className="mt-8 space-y-2 fade-in-up">
               <div className="text-[#ff8c00] animate-pulse">
                 <span className="text-[#00ff88]">&gt;</span> Initiating navigation sequence...
