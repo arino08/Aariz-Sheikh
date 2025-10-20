@@ -3,6 +3,7 @@
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image";
 
 // Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
@@ -91,12 +92,16 @@ export default function AboutSection() {
                                                 className="relative"
                                         >
                                                 <div className="relative w-full max-w-md mx-auto lg:mx-0">
-                                                        {/* Placeholder for profile image */}
+                                                        {/* Profile image */}
                                                         <div className="aspect-square bg-gradient-to-br from-[var(--terminal-purple)] to-[var(--terminal-blue)] rounded-lg p-1">
-                                                                <div className="w-full h-full bg-[#0D1117] rounded-lg flex items-center justify-center glitch">
-                                                                        <div className="text-6xl text-[var(--terminal-green)]">
-                                                                                &lt;/&gt;
-                                                                        </div>
+                                                                <div className="w-full h-full bg-[#0D1117] rounded-lg overflow-hidden relative">
+                                                                        <Image
+                                                                                src="/assets/devpfp.jpg"
+                                                                                alt="Aariz Sheikh - Developer"
+                                                                                fill
+                                                                                className="object-cover"
+                                                                                priority
+                                                                        />
                                                                 </div>
                                                         </div>
 
@@ -105,7 +110,7 @@ export default function AboutSection() {
 
                                                         {/* Floating elements */}
                                                         <div className="absolute -top-4 -right-4 font-mono text-xs text-[var(--code-comment)] bg-[#0D1117] px-2 py-1 border border-[var(--terminal-purple)] rounded">
-                                                                dev.jpg
+                                                                devpfp.jpg
                                                         </div>
                                                 </div>
                                         </div>

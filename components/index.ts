@@ -10,6 +10,9 @@ export { default as Navigation } from "./ui/Navigation";
 export { default as TypingAnimation } from "./ui/TypingAnimation";
 export { default as TerminalMenu } from "./ui/TerminalMenu";
 export { default as TerminalMatrixRain } from "./ui/TerminalMatrixRain";
+export { default as MiniTerminal } from "./ui/MiniTerminal";
+export { default as AdminPanel } from "./ui/AdminPanel";
+export { default as GlobalTerminalShortcut } from "./ui/GlobalTerminalShortcut";
 
 // 3D Components
 export { default as MatrixRain } from "./3d/MatrixRain";

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import GlobalTerminalShortcut from "@/components/ui/GlobalTerminalShortcut";
 
 const inter = Inter({
         variable: "--font-inter",
@@ -44,6 +45,7 @@ export default function RootLayout({
                         <body
                                 className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased bg-[#0D1117] text-white min-h-screen`}
                         >
+                                <GlobalTerminalShortcut />
                                 {children}
                         </body>
                 </html>
