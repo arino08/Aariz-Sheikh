@@ -32,7 +32,7 @@ const projects: Project[] = [
                         "Tailwind CSS",
                         "Liveblocks",
                 ],
-                liveUrl: "#", // Replace with your live URL
+                liveUrl: "#",
                 codeUrl: "https://github.com/arino08/TeamSyncV2",
                 image: "https://placehold.co/600x400/0D1117/FFFFFF?text=TeamSyncV2",
                 codeSnippet: `// convex/documents.ts - Real-time document creation
@@ -72,7 +72,7 @@ export const create = mutation({
                         "Tailwind CSS",
                         "Replicate",
                 ],
-                liveUrl: "https://graylour.vercel.app", // Replace with your live URL
+                liveUrl: "https://graylour.vercel.app",
                 codeUrl: "https://github.com/arino08/Graylour",
                 image: "https://placehold.co/600x400/0D1117/FFFFFF?text=Graylour",
                 codeSnippet: `// app/api/checkout/route.ts - Stripe Checkout Session
@@ -105,7 +105,7 @@ export async function POST(request: Request) {
                         "Framer Motion",
                         "Tailwind CSS",
                 ],
-                liveUrl: "https://arzion-lore.vercel.app", // Replace with your live URL
+                liveUrl: "https://arzion-lore.vercel.app",
                 codeUrl: "https://github.com/arino08/Arzion-Lore",
                 image: "https://placehold.co/600x400/0D1117/FFFFFF?text=Arzion+Lore",
                 codeSnippet: `// components/AnimatedPage.tsx - Page transition animations

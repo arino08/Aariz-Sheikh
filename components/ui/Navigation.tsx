@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
+import TerminalMenu from "./TerminalMenu";
 
 export default function Navigation() {
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
         const [activeSection, setActiveSection] = useState("hero");
         const [isScrolled, setIsScrolled] = useState(false);
         const [scrollProgress, setScrollProgress] = useState(0);
@@ -85,7 +87,22 @@ export default function Navigation() {
                 }
         };
 
+        const handleMenuToggle = () => {
+                setIsMenuOpen(!isMenuOpen);
+        };
+
+        const handleNavigation = (sectionId: string) => {
+                scrollToSection(sectionId);
+                setIsMenuOpen(false);
+        };
+
         return (
+                <>
+                        <TerminalMenu
+                                isOpen={isMenuOpen}
+                                onClose={() => setIsMenuOpen(false)}
+                                onNavigate={handleNavigation}
+                        />
                 <nav
                         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
                                 isScrolled
@@ -125,34 +142,59 @@ export default function Navigation() {
                                                                 {section.label}
                                                         </button>
                                                 ))}
+
+                                                {/* Terminal Menu Button (Desktop) */}
+                                                <button
+                                                        onClick={handleMenuToggle}
+                                                        className="text-[var(--terminal-green)] hover:text-[var(--terminal-blue)] transition-colors p-2 border border-[var(--terminal-green)]/30 rounded hover:border-[var(--terminal-blue)] hover:shadow-[0_0_10px_rgba(0,255,136,0.3)]"
+                                                        title="Open Terminal Navigation"
+                                                >
+                                                        <svg
+                                                                className="w-5 h-5"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                viewBox="0 0 24 24"
+                                                        >
+                                                                <path
+                                                                        strokeLinecap="round"
+                                                                        strokeLinejoin="round"
+                                                                        strokeWidth={2}
+                                                                        d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                                />
+                                                        </svg>
+                                                </button>
                                         </div>
 
-                                        {/* Mobile Menu Button */}
-                                        <button className="md:hidden text-[var(--terminal-green)] hover:text-[var(--terminal-blue)] transition-colors">
-                                                <svg
-                                                        className="w-6 h-6"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
-                                                >
-                                                        <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                strokeWidth={2}
-                                                                d="M4 6h16M4 12h16M4 18h16"
-                                                        />
-                                                </svg>
-                                        </button>
-                                </div>
-                        </div>
+                        {/* Mobile Menu Button */}
+                        <button
+                                onClick={handleMenuToggle}
+                                className="md:hidden text-[var(--terminal-green)] hover:text-[var(--terminal-blue)] transition-colors"
+                        >
+                                <svg
+                                        className="w-6 h-6"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                >
+                                        <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M4 6h16M4 12h16M4 18h16"
+                                        />
+                                </svg>
+                        </button>
+                </div>
+        </div>
 
-                        {/* Progress Bar */}
-                        <div
-                                className="absolute bottom-0 left-0 h-[1px] bg-[var(--terminal-green)] transition-all duration-300 ease-out"
-                                style={{
-                                        width: `${scrollProgress}%`,
-                                }}
-                        />
-                </nav>
+        {/* Progress Bar */}
+        <div
+                className="absolute bottom-0 left-0 h-[1px] bg-[var(--terminal-green)] transition-all duration-300 ease-out"
+                style={{
+                        width: `${scrollProgress}%`,
+                }}
+        />
+</nav>
+                </>
         );
 }
