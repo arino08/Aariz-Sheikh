@@ -12,6 +12,7 @@ export default function ContactSection() {
         const backgroundRef = useRef<HTMLDivElement>(null);
         const [tapCount, setTapCount] = useState(0);
         const [lastTapTime, setLastTapTime] = useState(0);
+        const [showHint, setShowHint] = useState(false);
 
         useEffect(() => {
                 const section = sectionRef.current;
@@ -61,16 +62,24 @@ export default function ContactSection() {
                         const newTapCount = tapCount + 1;
                         setTapCount(newTapCount);
 
+                        // Show hint after second tap
+                        if (newTapCount === 2) {
+                                setShowHint(true);
+                                setTimeout(() => setShowHint(false), 1000);
+                        }
+
                         if (newTapCount === 3) {
                                 // Triple tap detected!
                                 if (typeof window !== 'undefined' && (window as any).openAdminTerminal) {
                                         (window as any).openAdminTerminal();
                                 }
                                 setTapCount(0);
+                                setShowHint(false);
                         }
                 } else {
                         // Reset if too much time passed
                         setTapCount(1);
+                        setShowHint(false);
                 }
 
                 setLastTapTime(now);
@@ -342,7 +351,14 @@ async function connectWithDeveloper() {
                                 </div>
 
                                 {/* Footer */}
-                                <div className="mt-20 pt-8 border-t border-gray-800">
+                                <div className="mt-20 pt-8 border-t border-gray-800 relative">
+                                        {/* Tap hint tooltip */}
+                                        {showHint && (
+                                                <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-[var(--terminal-green)] text-[#0D1117] px-4 py-2 rounded-lg font-mono text-xs whitespace-nowrap animate-bounce">
+                                                        One more tap! 🎯
+                                                </div>
+                                        )}
+
                                         <div className="font-mono text-xs text-[var(--code-comment)]">
                                                 <div className="mb-2">
                                                         <span className="text-[var(--code-keyword)]">
