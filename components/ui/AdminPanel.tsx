@@ -181,41 +181,43 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
       />
 
       {/* Admin Panel */}
-      <div className="fixed inset-0 z-[90] flex items-center justify-center p-4">
-        <div className="bg-[#0D1117] border-2 border-[#00ff88] rounded-lg shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="fixed inset-0 z-[90] flex items-center justify-center p-2 md:p-4">
+        <div className="bg-[#0D1117] border-2 border-[#00ff88] rounded-lg shadow-2xl max-w-6xl w-full max-h-[95vh] md:max-h-[90vh] overflow-hidden flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 bg-[#161b22] border-b border-[#00ff88]/30">
-            <div className="flex items-center space-x-3">
-              <div className="w-3 h-3 rounded-full bg-red-500" />
-              <div className="w-3 h-3 rounded-full bg-yellow-500" />
-              <div className="w-3 h-3 rounded-full bg-green-500" />
-              <h2 className="ml-4 font-mono text-lg font-bold text-[#00ff88]">
-                Admin Panel - Project Management
+          <div className="flex items-center justify-between px-3 md:px-6 py-3 md:py-4 bg-[#161b22] border-b border-[#00ff88]/30">
+            <div className="flex items-center space-x-2 md:space-x-3 min-w-0">
+              <div className="hidden sm:flex items-center space-x-2">
+                <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-red-500" />
+                <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-yellow-500" />
+                <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-green-500" />
+              </div>
+              <h2 className="ml-0 sm:ml-4 font-mono text-sm md:text-lg font-bold text-[#00ff88] truncate">
+                <span className="hidden sm:inline">Admin Panel - </span>Project Management
               </h2>
             </div>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-[#00ff88] transition-colors"
+              className="text-gray-400 hover:text-[#00ff88] transition-colors p-1 active:scale-95 flex-shrink-0"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto p-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="flex-1 overflow-y-auto p-3 md:p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
               {/* Left Column - Form */}
-              <div className="space-y-4">
-                <h3 className="font-mono text-xl text-[#00ff88] mb-4">
+              <div className="space-y-3 md:space-y-4">
+                <h3 className="font-mono text-lg md:text-xl text-[#00ff88] mb-3 md:mb-4">
                   {isEditing ? "Edit Project" : "Add New Project"}
                 </h3>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-3 md:space-y-4">
                   {/* Title */}
                   <div>
-                    <label className="block font-mono text-sm text-gray-400 mb-1">
+                    <label className="block font-mono text-xs md:text-sm text-gray-400 mb-1">
                       Title *
                     </label>
                     <input
@@ -223,13 +225,13 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                       value={formData.title}
                       onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                       required
-                      className="w-full bg-[#161b22] border border-gray-700 rounded px-3 py-2 text-white font-mono text-sm focus:outline-none focus:border-[#00ff88]"
+                      className="w-full bg-[#161b22] border border-gray-700 rounded px-3 py-2 text-white font-mono text-sm md:text-base focus:outline-none focus:border-[#00ff88] touch-manipulation"
                     />
                   </div>
 
                   {/* Short Description */}
                   <div>
-                    <label className="block font-mono text-sm text-gray-400 mb-1">
+                    <label className="block font-mono text-xs md:text-sm text-gray-400 mb-1">
                       Short Description *
                     </label>
                     <input
@@ -239,13 +241,13 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                         setFormData({ ...formData, short_description: e.target.value })
                       }
                       required
-                      className="w-full bg-[#161b22] border border-gray-700 rounded px-3 py-2 text-white font-mono text-sm focus:outline-none focus:border-[#00ff88]"
+                      className="w-full bg-[#161b22] border border-gray-700 rounded px-3 py-2 text-white font-mono text-sm md:text-base focus:outline-none focus:border-[#00ff88] touch-manipulation"
                     />
                   </div>
 
                   {/* Description */}
                   <div>
-                    <label className="block font-mono text-sm text-gray-400 mb-1">
+                    <label className="block font-mono text-xs md:text-sm text-gray-400 mb-1">
                       Description *
                     </label>
                     <textarea
@@ -255,13 +257,13 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                       }
                       required
                       rows={4}
-                      className="w-full bg-[#161b22] border border-gray-700 rounded px-3 py-2 text-white font-mono text-sm focus:outline-none focus:border-[#00ff88]"
+                      className="w-full bg-[#161b22] border border-gray-700 rounded px-3 py-2 text-white font-mono text-sm md:text-base focus:outline-none focus:border-[#00ff88] touch-manipulation resize-y"
                     />
                   </div>
 
                   {/* Tech Stack */}
                   <div>
-                    <label className="block font-mono text-sm text-gray-400 mb-1">
+                    <label className="block font-mono text-xs md:text-sm text-gray-400 mb-1">
                       Tech Stack (comma or space separated) *
                     </label>
                     <input
@@ -270,9 +272,9 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                       onChange={(e) => handleTechStackChange(e.target.value)}
                       placeholder="React, Node.js, MongoDB"
                       required
-                      className="w-full bg-[#161b22] border border-gray-700 rounded px-3 py-2 text-white font-mono text-sm focus:outline-none focus:border-[#00ff88]"
+                      className="w-full bg-[#161b22] border border-gray-700 rounded px-3 py-2 text-white font-mono text-sm md:text-base focus:outline-none focus:border-[#00ff88] touch-manipulation"
                     />
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-[10px] md:text-xs text-gray-500 mt-1">
                       {formData.tech_stack.length > 0 && (
                         <span className="text-[#00ff88]">
                           {formData.tech_stack.length} tag{formData.tech_stack.length !== 1 ? 's' : ''}: {formData.tech_stack.join(' • ')}
@@ -284,7 +286,7 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
 
                   {/* Image Upload */}
                   <div>
-                    <label className="block font-mono text-sm text-gray-400 mb-1">
+                    <label className="block font-mono text-xs md:text-sm text-gray-400 mb-1">
                       Project Image
                     </label>
                     <input
@@ -292,19 +294,19 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                       accept="image/*"
                       onChange={handleImageUpload}
                       disabled={uploadingImage}
-                      className="w-full bg-[#161b22] border border-gray-700 rounded px-3 py-2 text-white font-mono text-sm focus:outline-none focus:border-[#00ff88]"
+                      className="w-full bg-[#161b22] border border-gray-700 rounded px-3 py-2 text-white font-mono text-xs md:text-sm focus:outline-none focus:border-[#00ff88] file:mr-2 md:file:mr-4 file:py-1 md:file:py-2 file:px-2 md:file:px-4 file:rounded file:border-0 file:text-xs md:file:text-sm file:font-mono file:bg-[#00ff88] file:text-black hover:file:bg-[#00d4ff] file:cursor-pointer"
                     />
                     {uploadingImage && (
-                      <p className="text-xs text-[#00ff88] mt-1">Uploading...</p>
+                      <p className="text-[10px] md:text-xs text-[#00ff88] mt-1">Uploading...</p>
                     )}
                     {formData.image_url && (
-                      <p className="text-xs text-gray-500 mt-1">✓ Image uploaded</p>
+                      <p className="text-[10px] md:text-xs text-gray-500 mt-1">✓ Image uploaded</p>
                     )}
                   </div>
 
                   {/* URLs */}
                   <div>
-                    <label className="block font-mono text-sm text-gray-400 mb-1">
+                    <label className="block font-mono text-xs md:text-sm text-gray-400 mb-1">
                       Project URL
                     </label>
                     <input
@@ -313,12 +315,13 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                       onChange={(e) =>
                         setFormData({ ...formData, project_url: e.target.value })
                       }
-                      className="w-full bg-[#161b22] border border-gray-700 rounded px-3 py-2 text-white font-mono text-sm focus:outline-none focus:border-[#00ff88]"
+                      className="w-full bg-[#161b22] border border-gray-700 rounded px-3 py-2 text-white font-mono text-sm md:text-base focus:outline-none focus:border-[#00ff88] touch-manipulation"
+                      placeholder="https://..."
                     />
                   </div>
 
                   <div>
-                    <label className="block font-mono text-sm text-gray-400 mb-1">
+                    <label className="block font-mono text-xs md:text-sm text-gray-400 mb-1">
                       GitHub URL
                     </label>
                     <input
@@ -327,30 +330,31 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                       onChange={(e) =>
                         setFormData({ ...formData, github_url: e.target.value })
                       }
-                      className="w-full bg-[#161b22] border border-gray-700 rounded px-3 py-2 text-white font-mono text-sm focus:outline-none focus:border-[#00ff88]"
+                      className="w-full bg-[#161b22] border border-gray-700 rounded px-3 py-2 text-white font-mono text-sm md:text-base focus:outline-none focus:border-[#00ff88] touch-manipulation"
+                      placeholder="https://github.com/..."
                     />
                   </div>
 
                   {/* Checkboxes */}
                   <div className="flex items-center space-x-4">
-                    <label className="flex items-center space-x-2 cursor-pointer">
+                    <label className="flex items-center space-x-2 cursor-pointer touch-manipulation">
                       <input
                         type="checkbox"
                         checked={formData.featured}
                         onChange={(e) =>
                           setFormData({ ...formData, featured: e.target.checked })
                         }
-                        className="w-4 h-4 bg-[#161b22] border-gray-700 rounded text-[#00ff88] focus:ring-[#00ff88]"
+                        className="w-4 h-4 md:w-5 md:h-5 bg-[#161b22] border-gray-700 rounded text-[#00ff88] focus:ring-[#00ff88] cursor-pointer"
                       />
-                      <span className="font-mono text-sm text-gray-400">Featured</span>
+                      <span className="font-mono text-xs md:text-sm text-gray-400">Featured</span>
                     </label>
                   </div>
 
                   {/* Buttons */}
-                  <div className="flex space-x-3 pt-4">
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-3 md:pt-4">
                     <button
                       type="submit"
-                      className="px-6 py-2 bg-[#00ff88] text-black font-mono text-sm rounded hover:bg-[#00d4ff] transition-colors"
+                      className="w-full sm:w-auto px-4 md:px-6 py-2.5 md:py-2 bg-[#00ff88] text-black font-mono text-sm md:text-base rounded hover:bg-[#00d4ff] transition-colors active:scale-95 touch-manipulation"
                     >
                       {isEditing ? "Update Project" : "Create Project"}
                     </button>
@@ -358,7 +362,7 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                       <button
                         type="button"
                         onClick={resetForm}
-                        className="px-6 py-2 bg-gray-700 text-white font-mono text-sm rounded hover:bg-gray-600 transition-colors"
+                        className="w-full sm:w-auto px-4 sm:px-6 py-2 bg-gray-700 text-white font-mono text-sm md:text-base rounded hover:bg-gray-600 transition-colors active:scale-95 touch-manipulation"
                       >
                         Cancel
                       </button>
@@ -369,47 +373,47 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
 
               {/* Right Column - Project List */}
               <div className="space-y-4">
-                <h3 className="font-mono text-xl text-[#00ff88] mb-4">
+                <h3 className="font-mono text-base md:text-xl text-[#00ff88] mb-3 md:mb-4">
                   Existing Projects ({projects.length})
                 </h3>
 
                 {isLoading ? (
-                  <div className="text-gray-400 font-mono text-sm">Loading...</div>
+                  <div className="text-gray-400 font-mono text-xs md:text-sm">Loading...</div>
                 ) : (
-                  <div className="space-y-3 max-h-[600px] overflow-y-auto">
+                  <div className="space-y-2 md:space-y-3 max-h-[500px] md:max-h-[600px] overflow-y-auto">
                     {projects.map((project) => (
                       <div
                         key={project.id}
-                        className="bg-[#161b22] border border-gray-700 rounded p-4 hover:border-[#00ff88]/50 transition-colors"
+                        className="bg-[#161b22] border border-gray-700 rounded p-3 md:p-4 hover:border-[#00ff88]/50 transition-colors"
                       >
-                        <div className="flex justify-between items-start mb-2">
-                          <h4 className="font-mono text-sm font-bold text-white">
+                        <div className="flex justify-between items-start mb-2 gap-2">
+                          <h4 className="font-mono text-xs md:text-sm font-bold text-white flex-1">
                             {project.title}
                             {project.featured && (
-                              <span className="ml-2 text-xs text-[#ff8c00]">★ Featured</span>
+                              <span className="ml-1.5 md:ml-2 text-[10px] md:text-xs text-[#ff8c00]">★ Featured</span>
                             )}
                           </h4>
-                          <div className="flex space-x-2">
+                          <div className="flex gap-2 flex-shrink-0">
                             <button
                               onClick={() => handleEdit(project)}
-                              className="text-[#00d4ff] hover:text-[#00ff88] text-xs"
+                              className="text-[#00d4ff] hover:text-[#00ff88] text-xs md:text-sm touch-manipulation active:scale-95 min-h-[44px] md:min-h-0 flex items-center"
                             >
                               Edit
                             </button>
                             <button
                               onClick={() => handleDelete(project.id)}
-                              className="text-red-400 hover:text-red-300 text-xs"
+                              className="text-red-400 hover:text-red-300 text-xs md:text-sm touch-manipulation active:scale-95 min-h-[44px] md:min-h-0 flex items-center"
                             >
                               Delete
                             </button>
                           </div>
                         </div>
-                        <p className="text-xs text-gray-400 mb-2">{project.short_description}</p>
+                        <p className="text-[10px] md:text-xs text-gray-400 mb-2">{project.short_description}</p>
                         <div className="flex flex-wrap gap-1">
                           {project.tech_stack.map((tech, i) => (
                             <span
                               key={i}
-                              className="px-2 py-0.5 bg-[#00ff88]/10 text-[#00ff88] text-xs font-mono rounded"
+                              className="px-1.5 md:px-2 py-0.5 bg-[#00ff88]/10 text-[#00ff88] text-[10px] md:text-xs font-mono rounded"
                             >
                               {tech}
                             </span>

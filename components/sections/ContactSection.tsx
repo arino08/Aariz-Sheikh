@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -10,6 +10,8 @@ export default function ContactSection() {
         const sectionRef = useRef<HTMLDivElement>(null);
         const contentRef = useRef<HTMLDivElement>(null);
         const backgroundRef = useRef<HTMLDivElement>(null);
+        const [tapCount, setTapCount] = useState(0);
+        const [lastTapTime, setLastTapTime] = useState(0);
 
         useEffect(() => {
                 const section = sectionRef.current;
@@ -48,6 +50,31 @@ export default function ContactSection() {
                         });
                 }
         }, []);
+
+        // Triple-tap handler for mobile admin access
+        const handleSecretTap = () => {
+                const now = Date.now();
+                const timeDiff = now - lastTapTime;
+
+                if (timeDiff < 500) {
+                        // Taps within 500ms count as sequential
+                        const newTapCount = tapCount + 1;
+                        setTapCount(newTapCount);
+
+                        if (newTapCount === 3) {
+                                // Triple tap detected!
+                                if (typeof window !== 'undefined' && (window as any).openAdminTerminal) {
+                                        (window as any).openAdminTerminal();
+                                }
+                                setTapCount(0);
+                        }
+                } else {
+                        // Reset if too much time passed
+                        setTapCount(1);
+                }
+
+                setLastTapTime(now);
+        };
 
         const contactInfo = {
                 email: "arinopc22@gmail.com",
@@ -331,7 +358,11 @@ async function connectWithDeveloper() {
                                                                 and lots of ☕
                                                         </span>
                                                 </div>
-                                                <div className="mb-2">
+                                                <div
+                                                        className="mb-2 cursor-pointer select-none"
+                                                        onClick={handleSecretTap}
+                                                        onTouchEnd={handleSecretTap}
+                                                >
                                                         <span className="text-[var(--code-comment)]">
                                                                 {" "}
                                                                 * © 2025 Aariz

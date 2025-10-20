@@ -122,39 +122,39 @@ export default function MiniTerminal({ isOpen, onClose, onAuthenticated }: MiniT
       <div
         ref={terminalRef}
         className="fixed bottom-0 left-0 right-0 z-[70] bg-[#0D1117] border-t-2 border-[#00ff88] shadow-2xl"
-        style={{ height: '300px' }}
+        style={{ height: 'min(350px, 50vh)' }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-2 bg-[#161b22] border-b border-[#00ff88]/30">
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 rounded-full bg-red-500" />
-            <div className="w-3 h-3 rounded-full bg-yellow-500" />
-            <div className="w-3 h-3 rounded-full bg-green-500" />
-            <span className="ml-4 font-mono text-xs text-[#00ff88]">mini-terminal</span>
+        <div className="flex items-center justify-between px-3 md:px-4 py-2 bg-[#161b22] border-b border-[#00ff88]/30">
+          <div className="flex items-center space-x-1.5 md:space-x-2">
+            <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-red-500" />
+            <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-yellow-500" />
+            <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-green-500" />
+            <span className="ml-2 md:ml-4 font-mono text-[10px] md:text-xs text-[#00ff88]">mini-terminal</span>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-[#00ff88] transition-colors"
+            className="text-gray-400 hover:text-[#00ff88] transition-colors p-1 active:scale-95"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
         {/* Terminal Content */}
-        <div className="p-4 font-mono text-sm h-[calc(100%-40px)] overflow-y-auto">
+        <div className="p-3 md:p-4 font-mono text-xs md:text-sm h-[calc(100%-48px)] overflow-y-auto">
           {/* Output */}
           <div className="space-y-1 mb-2">
             {output.length === 0 && (
-              <div className="text-gray-500 text-xs">
+              <div className="text-gray-500 text-[10px] md:text-xs">
                 Welcome to Admin Terminal. Type 'help' for available commands.
               </div>
             )}
             {output.map((line, index) => (
               <div
                 key={index}
-                className={`${
+                className={`text-[10px] md:text-xs ${
                   line.startsWith("✓")
                     ? "text-[#00ff88]"
                     : line.startsWith("$")
@@ -171,8 +171,8 @@ export default function MiniTerminal({ isOpen, onClose, onAuthenticated }: MiniT
 
           {/* Input Line */}
           {!isAuthenticated && (
-            <div className="flex items-center space-x-2">
-              <span className="text-[#00ff88]">visitor@admin</span>
+            <div className="flex items-center space-x-1 md:space-x-2 text-xs md:text-sm">
+              <span className="text-[#00ff88] text-[10px] md:text-xs">visitor@admin</span>
               <span className="text-gray-400">:</span>
               <span className="text-[#00d4ff]">~</span>
               <span className="text-gray-400">$</span>
@@ -182,12 +182,13 @@ export default function MiniTerminal({ isOpen, onClose, onAuthenticated }: MiniT
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="flex-1 bg-transparent outline-none text-white caret-[#00ff88]"
+                className="flex-1 bg-transparent outline-none text-white caret-[#00ff88] text-xs md:text-sm min-w-0"
                 autoComplete="off"
                 spellCheck="false"
+                placeholder="Enter command..."
               />
               <span
-                className={`inline-block w-2 h-4 bg-[#00ff88] ${
+                className={`inline-block w-1.5 md:w-2 h-3 md:h-4 bg-[#00ff88] flex-shrink-0 ${
                   cursorVisible ? "opacity-100" : "opacity-0"
                 }`}
               />
@@ -196,8 +197,8 @@ export default function MiniTerminal({ isOpen, onClose, onAuthenticated }: MiniT
         </div>
 
         {/* Help Text */}
-        <div className="absolute bottom-2 right-4 text-xs text-gray-600 font-mono">
-          Press <kbd className="px-1 py-0.5 bg-gray-800 rounded border border-gray-700">ESC</kbd> to close
+        <div className="hidden sm:block absolute bottom-2 right-4 text-[10px] md:text-xs text-gray-600 font-mono">
+          Press <kbd className="px-1 py-0.5 bg-gray-800 rounded border border-gray-700 text-[10px] md:text-xs">ESC</kbd> to close
         </div>
       </div>
     </>

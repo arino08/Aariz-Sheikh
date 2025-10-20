@@ -21,6 +21,17 @@ export default function GlobalTerminalShortcut() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  // Expose a global function to open terminal (for mobile access)
+  useEffect(() => {
+    (window as any).openAdminTerminal = () => {
+      setIsMiniTerminalOpen(true);
+    };
+
+    return () => {
+      delete (window as any).openAdminTerminal;
+    };
+  }, []);
+
   const handleAuthenticated = () => {
     setIsAdminPanelOpen(true);
   };

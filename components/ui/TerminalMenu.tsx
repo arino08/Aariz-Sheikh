@@ -360,31 +360,31 @@ export default function TerminalMenu({ isOpen, onClose, onNavigate }: TerminalMe
         </div>
 
         {/* Terminal Content */}
-        <div className="p-6 font-mono text-sm h-[calc(100%-60px)] overflow-y-auto">
+        <div className="p-4 md:p-6 font-mono text-xs md:text-sm h-[calc(100%-60px)] overflow-y-auto">
           {/* Command Prompt */}
-          <div className="mb-4">
+          <div className="mb-3 md:mb-4 text-xs md:text-sm">
             <span className="text-[#00ff88]">visitor@portfolio</span>
             <span className="text-gray-400">:</span>
             <span className="text-[#00d4ff]">~</span>
             <span className="text-gray-400">$ </span>
             <span className="text-white">{typedText}</span>
             {stage === 'typing' && (
-              <span className={`inline-block w-2 h-4 bg-[#00ff88] ml-1 ${cursorVisible ? 'opacity-100' : 'opacity-0'}`} />
+              <span className={`inline-block w-1.5 md:w-2 h-3 md:h-4 bg-[#00ff88] ml-1 ${cursorVisible ? 'opacity-100' : 'opacity-0'}`} />
             )}
           </div>
 
           {/* Loading State */}
           {(stage === 'loading' || stage === 'morphing' || stage === 'ready' || stage === 'navigating') && (
-            <div className="mb-6">
+            <div className="mb-4 md:mb-6">
               {stage === 'loading' && (
-                <div className="text-[#00ff88] animate-pulse">
+                <div className="text-[#00ff88] animate-pulse text-xs md:text-sm">
                   Processing{loadingDots}
                 </div>
               )}
 
               {(stage === 'morphing' || stage === 'ready' || stage === 'navigating') && (
                 <div ref={navLinksRef}>
-                  <div className="text-gray-400 mb-4">
+                  <div className="text-gray-400 mb-3 md:mb-4 text-xs md:text-sm">
                     <span className="text-[#00ff88]">&gt;</span> Available sections:
                   </div>
 
@@ -393,9 +393,9 @@ export default function TerminalMenu({ isOpen, onClose, onNavigate }: TerminalMe
                       key={item.id}
                       onClick={() => handleNavClick(item)}
                       disabled={stage !== 'ready'}
-                      className={`group block w-full text-left py-4 px-4 mb-2 transition-all duration-300 relative ${
+                      className={`group block w-full text-left py-3 md:py-4 px-3 md:px-4 mb-2 transition-all duration-300 relative touch-manipulation ${
                         stage === 'ready'
-                          ? 'hover:bg-[#00ff88]/10 hover:border-l-4 hover:border-[#00ff88] cursor-pointer hover:shadow-[0_0_15px_rgba(0,255,136,0.2)]'
+                          ? 'hover:bg-[#00ff88]/10 hover:border-l-4 hover:border-[#00ff88] cursor-pointer hover:shadow-[0_0_15px_rgba(0,255,136,0.2)] active:scale-[0.98]'
                           : 'cursor-wait'
                       } ${
                         selectedItem === item.id
@@ -408,11 +408,11 @@ export default function TerminalMenu({ isOpen, onClose, onNavigate }: TerminalMe
                         <div className="absolute inset-0 bg-gradient-to-r from-[#00ff88]/0 to-[#00ff88]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       )}
 
-                      <div className="flex items-center space-x-4 relative z-10">
-                        <span className="text-[#00ff88] text-xs font-bold">
+                      <div className="flex items-center space-x-2 md:space-x-4 relative z-10">
+                        <span className="text-[#00ff88] text-[10px] md:text-xs font-bold flex-shrink-0">
                           [{item.number}]
                         </span>
-                        <span className={`text-2xl md:text-4xl font-bold transition-all duration-300 ${
+                        <span className={`text-xl sm:text-2xl md:text-4xl font-bold transition-all duration-300 ${
                           selectedItem === item.id
                             ? 'text-[#ff8c00] text-glitch-effect'
                             : 'text-[#00ff88] group-hover:text-[#00d4ff]'
@@ -420,9 +420,9 @@ export default function TerminalMenu({ isOpen, onClose, onNavigate }: TerminalMe
                           {morphedTexts[item.number] || generateRandomString(item.label.length)}
                         </span>
 
-                        {/* Arrow indicator on hover */}
+                        {/* Arrow indicator on hover/active */}
                         {stage === 'ready' && (
-                          <span className="text-[#00ff88] opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-xl">
+                          <span className="text-[#00ff88] opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-300 text-lg md:text-xl flex-shrink-0">
                             →
                           </span>
                         )}
@@ -436,11 +436,11 @@ export default function TerminalMenu({ isOpen, onClose, onNavigate }: TerminalMe
 
           {/* Navigation Loading State */}
           {stage === 'navigating' && selectedItem && showLoadingMessage && !isFullScreen && (
-            <div className="mt-8 space-y-2 fade-in-up">
-              <div className="text-[#ff8c00] animate-pulse">
+            <div className="mt-6 md:mt-8 space-y-2 fade-in-up">
+              <div className="text-[#ff8c00] animate-pulse text-xs md:text-sm">
                 <span className="text-[#00ff88]">&gt;</span> Initiating navigation sequence...
               </div>
-              <div className="text-gray-400 text-xs">
+              <div className="text-gray-400 text-[10px] md:text-xs">
                 <span className="text-[#00ff88]">&gt;</span> Decrypting path to {navigationItems.find(i => i.id === selectedItem)?.label}...
               </div>
             </div>
@@ -449,24 +449,34 @@ export default function TerminalMenu({ isOpen, onClose, onNavigate }: TerminalMe
           {/* Cursor when ready */}
           {stage === 'ready' && (
             <>
-              <div className="mt-8">
+              <div className="mt-6 md:mt-8 text-xs md:text-sm">
                 <span className="text-[#00ff88]">visitor@portfolio</span>
                 <span className="text-gray-400">:</span>
                 <span className="text-[#00d4ff]">~</span>
                 <span className="text-gray-400">$ </span>
-                <span className={`inline-block w-2 h-4 bg-[#00ff88] ml-1 ${cursorVisible ? 'opacity-100' : 'opacity-0'}`} />
+                <span className={`inline-block w-1.5 md:w-2 h-3 md:h-4 bg-[#00ff88] ml-1 ${cursorVisible ? 'opacity-100' : 'opacity-0'}`} />
               </div>
 
-              {/* Keyboard shortcuts hint */}
-              <div className="mt-6 pt-6 border-t border-gray-700">
-                <div className="text-xs text-gray-500 space-y-1">
+              {/* Keyboard shortcuts hint - Hidden on very small screens */}
+              <div className="hidden sm:block mt-4 md:mt-6 pt-4 md:pt-6 border-t border-gray-700">
+                <div className="text-[10px] md:text-xs text-gray-500 space-y-1">
                   <div className="flex items-center space-x-2">
                     <span className="text-[#00ff88]">&gt;</span>
-                    <span>Press <kbd className="px-2 py-1 bg-gray-800 rounded border border-gray-700 text-[#00ff88]">1-5</kbd> for quick navigation</span>
+                    <span>Press <kbd className="px-1.5 md:px-2 py-0.5 md:py-1 bg-gray-800 rounded border border-gray-700 text-[#00ff88] text-[10px] md:text-xs">1-5</kbd> for quick navigation</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="text-[#00ff88]">&gt;</span>
-                    <span>Press <kbd className="px-2 py-1 bg-gray-800 rounded border border-gray-700 text-[#00ff88]">ESC</kbd> to close</span>
+                    <span>Press <kbd className="px-1.5 md:px-2 py-0.5 md:py-1 bg-gray-800 rounded border border-gray-700 text-[#00ff88] text-[10px] md:text-xs">ESC</kbd> to close</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Mobile hint - Tap to navigate */}
+              <div className="sm:hidden mt-4 pt-4 border-t border-gray-700">
+                <div className="text-[10px] text-gray-500 space-y-1">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-[#00ff88]">&gt;</span>
+                    <span>Tap a section to navigate</span>
                   </div>
                 </div>
               </div>

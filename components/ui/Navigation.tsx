@@ -122,7 +122,7 @@ export default function Navigation() {
                                                 {"<Aariz-Sheikh/>"}
                                         </div>
 
-                                        {/* Navigation Links */}
+                                        {/* Desktop: Navigation Links + Terminal Button */}
                                         <div className="hidden md:flex items-center space-x-8">
                                                 {sections.map((section) => (
                                                         <button
@@ -165,25 +165,26 @@ export default function Navigation() {
                                                 </button>
                                         </div>
 
-                        {/* Mobile Menu Button */}
-                        <button
-                                onClick={handleMenuToggle}
-                                className="md:hidden text-[var(--terminal-green)] hover:text-[var(--terminal-blue)] transition-colors"
-                        >
-                                <svg
-                                        className="w-6 h-6"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                >
-                                        <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M4 6h16M4 12h16M4 18h16"
-                                        />
-                                </svg>
-                        </button>
+                                        {/* Mobile: Terminal Button (replaces hamburger) */}
+                                        <button
+                                                onClick={handleMenuToggle}
+                                                className="md:hidden text-[var(--terminal-green)] hover:text-[var(--terminal-blue)] transition-all p-2 border border-[var(--terminal-green)]/30 rounded hover:border-[var(--terminal-blue)] hover:shadow-[0_0_10px_rgba(0,255,136,0.3)] active:scale-95"
+                                                title="Open Terminal Menu"
+                                        >
+                                                <svg
+                                                        className="w-6 h-6"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                >
+                                                        <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth={2}
+                                                                d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                        />
+                                                </svg>
+                                        </button>
                 </div>
         </div>
 
