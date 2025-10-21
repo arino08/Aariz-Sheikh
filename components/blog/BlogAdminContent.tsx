@@ -466,7 +466,7 @@ export default function BlogAdminContent() {
                 {/* Description Preview */}
                 {formData.description && (
                   <div className="mb-8 p-4 bg-[#0D1117] border-l-4 border-[#00d4ff] rounded">
-                    <div className="font-mono text-xs text-[#00d4ff] mb-2">// Description</div>
+                    <div className="font-mono text-xs text-[#00d4ff] mb-2">{'//'} Description</div>
                     <p className="text-gray-300 leading-relaxed">{formData.description}</p>
                   </div>
                 )}

@@ -23,12 +23,13 @@ export default function GlobalTerminalShortcut() {
 
   // Expose a global function to open terminal (for mobile access)
   useEffect(() => {
-    (window as any).openAdminTerminal = () => {
+    const win = window as Window & { openAdminTerminal?: () => void };
+    win.openAdminTerminal = () => {
       setIsMiniTerminalOpen(true);
     };
 
     return () => {
-      delete (window as any).openAdminTerminal;
+      delete win.openAdminTerminal;
     };
   }, []);
 

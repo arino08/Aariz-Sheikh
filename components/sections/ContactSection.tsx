@@ -70,8 +70,9 @@ export default function ContactSection() {
 
                         if (newTapCount === 3) {
                                 // Triple tap detected!
-                                if (typeof window !== 'undefined' && (window as any).openAdminTerminal) {
-                                        (window as any).openAdminTerminal();
+                                const win = window as Window & { openAdminTerminal?: () => void };
+                                if (typeof window !== 'undefined' && win.openAdminTerminal) {
+                                        win.openAdminTerminal();
                                 }
                                 setTapCount(0);
                                 setShowHint(false);

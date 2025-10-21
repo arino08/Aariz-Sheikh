@@ -52,7 +52,7 @@ export interface Database {
           published_at: string | null;
           views: number;
           reading_time: number | null;
-          metadata: Record<string, any> | null;
+          metadata: Record<string, unknown> | null;
           created_at: string;
           updated_at: string;
         };

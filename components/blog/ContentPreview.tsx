@@ -201,7 +201,7 @@ export default function ContentPreview({ post }: ContentPreviewProps) {
           {/* Description */}
           <div className="mb-8">
             <div className="font-mono text-xs text-[#ff8c00] mb-2">
-              // Description
+              {'//'} Description
             </div>
             <p className="text-gray-300 leading-relaxed text-sm md:text-base">
               {post.description}

@@ -148,7 +148,7 @@ export default function MiniTerminal({ isOpen, onClose, onAuthenticated }: MiniT
           <div className="space-y-1 mb-2">
             {output.length === 0 && (
               <div className="text-gray-500 text-[10px] md:text-xs">
-                Welcome to Admin Terminal. Type 'help' for available commands.
+                Welcome to Admin Terminal. Type &apos;help&apos; for available commands.
               </div>
             )}
             {output.map((line, index) => (
