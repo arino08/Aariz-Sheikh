@@ -96,7 +96,7 @@ export default function BlockEditor({ content, onChange, onImageUpload }: BlockE
           blocks.push({
             type: 'quote',
             text: p?.textContent || '',
-            author: footer?.textContent,
+            author: footer?.textContent || undefined,
           });
         }
       }
