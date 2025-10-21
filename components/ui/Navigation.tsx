@@ -3,11 +3,16 @@
 import { useEffect, useState, useMemo } from "react";
 import TerminalMenu from "./TerminalMenu";
 
-export default function Navigation() {
-	const [isMenuOpen, setIsMenuOpen] = useState(false);
-        const [activeSection, setActiveSection] = useState("hero");
-        const [isScrolled, setIsScrolled] = useState(false);
-        const [scrollProgress, setScrollProgress] = useState(0);
+interface NavigationProps {
+        /** When true, render a compact/ui-friendly version (only terminal menu button). */
+        compact?: boolean;
+}
+
+export default function Navigation({ compact = false }: NavigationProps) {
+                const [isMenuOpen, setIsMenuOpen] = useState(false);
+                                const [activeSection, setActiveSection] = useState("hero");
+                                const [isScrolled, setIsScrolled] = useState(false);
+                                const [scrollProgress, setScrollProgress] = useState(0);
 
         const sections = useMemo(
                 () => [
@@ -21,6 +26,8 @@ export default function Navigation() {
         );
 
         useEffect(() => {
+                if (compact) return; // compact mode doesn't need scroll listeners
+
                 const handleScroll = () => {
                         const scrollPosition = window.scrollY;
                         setIsScrolled(scrollPosition > 100);
@@ -76,7 +83,7 @@ export default function Navigation() {
                                 );
                         }
                 };
-        }, [sections]);
+        }, [sections, compact]);
 
         const scrollToSection = (sectionId: string) => {
                 if (typeof window !== "undefined") {
@@ -96,6 +103,41 @@ export default function Navigation() {
                 setIsMenuOpen(false);
         };
 
+        // If compact, render only TerminalMenu + small toggle button (no fixed nav)
+        if (compact) {
+                return (
+                        <>
+                                <TerminalMenu
+                                        isOpen={isMenuOpen}
+                                        onClose={() => setIsMenuOpen(false)}
+                                        onNavigate={handleNavigation}
+                                />
+
+                                {/* Compact toggle button - designed to be placed inside a custom header */}
+                                <button
+                                        onClick={handleMenuToggle}
+                                        className="text-[var(--terminal-green)] hover:text-[var(--terminal-blue)] transition-all p-2 border border-[var(--terminal-green)]/30 rounded hover:border-[var(--terminal-blue)] hover:shadow-[0_0_10px_rgba(0,255,136,0.18)] active:scale-95"
+                                        aria-label="Open Terminal Menu"
+                                >
+                                        <svg
+                                                className="w-6 h-6"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                        >
+                                                <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                />
+                                        </svg>
+                                </button>
+                        </>
+                );
+        }
+
+        // Default/full navigation (unchanged behavior)
         return (
                 <>
                         <TerminalMenu

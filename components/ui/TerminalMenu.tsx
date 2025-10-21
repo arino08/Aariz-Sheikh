@@ -17,7 +17,8 @@ const navigationItems = [
   { id: "about", label: "ABOUT", number: 2 },
   { id: "skills", label: "SKILLS", number: 3 },
   { id: "projects", label: "PROJECTS", number: 4 },
-  { id: "contact", label: "CONTACT", number: 5 },
+  { id: "blog", label: "BLOG", number: 5, isExternal: true },
+  { id: "contact", label: "CONTACT", number: 6 },
 ];
 
 const RANDOM_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?/~`";
@@ -56,8 +57,8 @@ export default function TerminalMenu({ isOpen, onClose, onNavigate }: TerminalMe
         return;
       }
 
-      // Number keys 1-5 for navigation (only when ready)
-      if (stage === 'ready' && /^[1-5]$/.test(e.key)) {
+      // Number keys 1-6 for navigation (only when ready)
+      if (stage === 'ready' && /^[1-6]$/.test(e.key)) {
         const itemNumber = parseInt(e.key);
         const item = navigationItems.find(i => i.number === itemNumber);
         if (item) {
@@ -259,14 +260,19 @@ export default function TerminalMenu({ isOpen, onClose, onNavigate }: TerminalMe
 
     // After fullscreen transition, navigate and fade out matrix
     setTimeout(() => {
-      onNavigate(item.id);
-      // Fade out matrix rain smoothly
-      setTimeout(() => {
-        setIsFullScreen(false);
+      // Handle blog navigation (external page) vs section navigation
+      if (item.isExternal && item.id === 'blog') {
+        window.location.href = '/blog';
+      } else {
+        onNavigate(item.id);
+        // Fade out matrix rain smoothly
         setTimeout(() => {
-          onClose();
-        }, 800);
-      }, 1000);
+          setIsFullScreen(false);
+          setTimeout(() => {
+            onClose();
+          }, 800);
+        }, 1000);
+      }
     }, loadingOverlayDelay + 1000);
   };
 

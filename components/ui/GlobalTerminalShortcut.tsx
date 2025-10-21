@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import MiniTerminal from "./MiniTerminal";
-import AdminPanel from "./AdminPanel";
+import UnifiedAdminPanel from "./UnifiedAdminPanel";
 
 export default function GlobalTerminalShortcut() {
   const [isMiniTerminalOpen, setIsMiniTerminalOpen] = useState(false);
@@ -43,7 +43,7 @@ export default function GlobalTerminalShortcut() {
         onClose={() => setIsMiniTerminalOpen(false)}
         onAuthenticated={handleAuthenticated}
       />
-      <AdminPanel
+      <UnifiedAdminPanel
         isOpen={isAdminPanelOpen}
         onClose={() => setIsAdminPanelOpen(false)}
       />

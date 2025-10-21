@@ -469,3 +469,114 @@ body {
 .animate-spin {
         animation: spin 1s linear infinite;
 }
+
+/* Blog interface custom animations */
+@keyframes matrixFall {
+        0% {
+                transform: translateY(-100%);
+                opacity: 0;
+        }
+        10% {
+                opacity: 0.5;
+        }
+        90% {
+                opacity: 0.5;
+        }
+        100% {
+                transform: translateY(400%);
+                opacity: 0;
+        }
+}
+
+.animate-matrixFall {
+        animation: matrixFall 2s linear infinite;
+}
+
+@keyframes scanline {
+        0% {
+                transform: translateY(-100%);
+        }
+        100% {
+                transform: translateY(100%);
+        }
+}
+
+.animate-scanline {
+        animation: scanline 2s linear infinite;
+}
+
+@keyframes fadeIn {
+        from {
+                opacity: 0;
+        }
+        to {
+                opacity: 1;
+        }
+}
+
+.animate-fadeIn {
+        animation: fadeIn 0.3s ease-out;
+}
+
+/* Custom scrollbar for blog panels */
+.custom-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: #00ff88 #0d1117;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+        background: #0d1117;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #00ff88;
+        border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #00ff88cc;
+}
+
+/* Particle explosion animation for blog categories */
+@keyframes particleExplode {
+        0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+        }
+        100% {
+                opacity: 0;
+                transform: translate(var(--particle-x, 0), var(--particle-y, 0)) scale(0);
+        }
+}
+
+/* Slide in from left for blog posts */
+@keyframes slideInFromLeft {
+        from {
+                opacity: 0;
+                transform: translateX(-20px);
+        }
+        to {
+                opacity: 1;
+                transform: translateX(0);
+        }
+}
+
+@keyframes slide-up {
+        from {
+                transform: translateY(100%);
+                opacity: 0;
+        }
+        to {
+                transform: translateY(0);
+                opacity: 1;
+        }
+}
+
+.animate-slide-up {
+        animation: slide-up 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
