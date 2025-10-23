@@ -15,6 +15,7 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Form state
   const [formData, setFormData] = useState({
@@ -29,10 +30,45 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
     status: "active" as "active" | "archived" | "draft",
   });
 
+  // Filter projects based on search
+  const filteredProjects = projects.filter((project) =>
+    project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    project.short_description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    project.tech_stack.some((tech) => tech.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
   // Load projects
   useEffect(() => {
     if (isOpen) {
       loadProjects();
+    }
+  }, [isOpen]);
+
+  // Prevent background scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      // Save current scroll position and lock body
+      const scrollY = window.scrollY;
+      const originalOverflow = document.body.style.overflow;
+      const originalPosition = document.body.style.position;
+      const originalTop = document.body.style.top;
+      const originalWidth = document.body.style.width;
+
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.documentElement.style.overflow = 'hidden';
+
+      return () => {
+        // Restore original styles and scroll position
+        document.body.style.overflow = originalOverflow;
+        document.body.style.position = originalPosition;
+        document.body.style.top = originalTop;
+        document.body.style.width = originalWidth;
+        document.documentElement.style.overflow = '';
+        window.scrollTo(0, scrollY);
+      };
     }
   }, [isOpen]);
 
@@ -181,36 +217,62 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
       />
 
       {/* Admin Panel */}
-      <div className="fixed inset-0 z-[90] flex items-center justify-center p-2 md:p-4">
-        <div className="bg-[#0D1117] border-2 border-[#00ff88] rounded-lg shadow-2xl max-w-6xl w-full max-h-[95vh] md:max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="fixed inset-0 z-[90] flex items-center justify-center p-4">
+        <div
+          className="bg-[#0D1117] border-2 border-[#00ff88] rounded-lg shadow-2xl max-w-6xl w-full h-[95vh] md:h-[90vh] flex flex-col overscroll-contain"
+          onClick={(e) => e.stopPropagation()}
+        >
           {/* Header */}
-          <div className="flex items-center justify-between px-3 md:px-6 py-3 md:py-4 bg-[#161b22] border-b border-[#00ff88]/30">
-            <div className="flex items-center space-x-2 md:space-x-3 min-w-0">
-              <div className="hidden sm:flex items-center space-x-2">
-                <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-red-500" />
-                <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-yellow-500" />
-                <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-green-500" />
+          <div className="bg-[#161b22] border-b border-[#00ff88]/30 flex-shrink-0">
+            <div className="flex items-center justify-between px-3 md:px-6 py-3 md:py-4">
+              <div className="flex items-center space-x-2 md:space-x-3 min-w-0">
+                <div className="hidden sm:flex items-center space-x-2">
+                  <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-red-500" />
+                  <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-yellow-500" />
+                  <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-green-500" />
+                </div>
+                <h2 className="ml-0 sm:ml-4 font-mono text-sm md:text-lg font-bold text-[#00ff88] truncate">
+                  <span className="hidden sm:inline">Admin Panel - </span>Project Management
+                </h2>
               </div>
-              <h2 className="ml-0 sm:ml-4 font-mono text-sm md:text-lg font-bold text-[#00ff88] truncate">
-                <span className="hidden sm:inline">Admin Panel - </span>Project Management
-              </h2>
+              <button
+                onClick={onClose}
+                className="text-gray-400 hover:text-[#00ff88] transition-colors p-1 active:scale-95 flex-shrink-0"
+              >
+                <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
-            <button
-              onClick={onClose}
-              className="text-gray-400 hover:text-[#00ff88] transition-colors p-1 active:scale-95 flex-shrink-0"
-            >
-              <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+
+            {/* Search Bar */}
+            <div className="px-3 md:px-6 pb-3 md:pb-4">
+              <div className="relative">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search projects by title, description, or tech stack..."
+                  className="w-full bg-[#0D1117] border border-gray-700 rounded px-3 py-2 pl-10 text-white font-mono text-sm focus:outline-none focus:border-[#00ff88] transition-colors"
+                />
+                <svg
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+            </div>
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto p-3 md:p-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+          <div className="flex-1 overflow-y-auto p-3 md:p-6 min-h-0 overscroll-contain scrollbar-terminal">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 h-full">
               {/* Left Column - Form */}
               <div className="space-y-3 md:space-y-4">
-                <h3 className="font-mono text-lg md:text-xl text-[#00ff88] mb-3 md:mb-4">
+                <h3 className="font-mono text-lg md:text-xl text-[#00ff88] mb-3 md:mb-4 sticky top-0 bg-[#0D1117] z-10 pb-2">
                   {isEditing ? "Edit Project" : "Add New Project"}
                 </h3>
 
@@ -373,15 +435,19 @@ export default function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
 
               {/* Right Column - Project List */}
               <div className="space-y-4">
-                <h3 className="font-mono text-base md:text-xl text-[#00ff88] mb-3 md:mb-4">
-                  Existing Projects ({projects.length})
+                <h3 className="font-mono text-base md:text-xl text-[#00ff88] mb-3 md:mb-4 sticky top-0 bg-[#0D1117] z-10 pb-2">
+                  Existing Projects ({filteredProjects.length}{searchQuery && ` of ${projects.length}`})
                 </h3>
 
                 {isLoading ? (
                   <div className="text-gray-400 font-mono text-xs md:text-sm">Loading...</div>
+                ) : filteredProjects.length === 0 ? (
+                  <div className="text-gray-400 font-mono text-xs md:text-sm text-center py-8">
+                    {searchQuery ? "No projects match your search" : "No projects yet"}
+                  </div>
                 ) : (
-                  <div className="space-y-2 md:space-y-3 max-h-[500px] md:max-h-[600px] overflow-y-auto">
-                    {projects.map((project) => (
+                  <div className="space-y-2 md:space-y-3">
+                    {filteredProjects.map((project) => (
                       <div
                         key={project.id}
                         className="bg-[#161b22] border border-gray-700 rounded p-3 md:p-4 hover:border-[#00ff88]/50 transition-colors"

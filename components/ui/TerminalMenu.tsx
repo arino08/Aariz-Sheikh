@@ -18,7 +18,8 @@ const navigationItems = [
   { id: "skills", label: "SKILLS", number: 3 },
   { id: "projects", label: "PROJECTS", number: 4 },
   { id: "blog", label: "BLOG", number: 5, isExternal: true },
-  { id: "contact", label: "CONTACT", number: 6 },
+  { id: "certifications", label: "CERTIFICATIONS", number: 6, isExternal: true },
+  { id: "contact", label: "CONTACT", number: 7 },
 ];
 
 const RANDOM_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?/~`";
@@ -57,8 +58,8 @@ export default function TerminalMenu({ isOpen, onClose, onNavigate }: TerminalMe
         return;
       }
 
-      // Number keys 1-6 for navigation (only when ready)
-      if (stage === 'ready' && /^[1-6]$/.test(e.key)) {
+      // Number keys 1-7 for navigation (only when ready)
+      if (stage === 'ready' && /^[1-7]$/.test(e.key)) {
         const itemNumber = parseInt(e.key);
         const item = navigationItems.find(i => i.number === itemNumber);
         if (item) {
@@ -260,9 +261,13 @@ export default function TerminalMenu({ isOpen, onClose, onNavigate }: TerminalMe
 
     // After fullscreen transition, navigate and fade out matrix
     setTimeout(() => {
-      // Handle blog navigation (external page) vs section navigation
-      if (item.isExternal && item.id === 'blog') {
-        window.location.href = '/blog';
+      // Handle external pages (blog, certifications) vs section navigation
+      if (item.isExternal) {
+        if (item.id === 'blog') {
+          window.location.href = '/blog';
+        } else if (item.id === 'certifications') {
+          window.location.href = '/certifications';
+        }
       } else {
         onNavigate(item.id);
         // Fade out matrix rain smoothly
@@ -468,7 +473,7 @@ export default function TerminalMenu({ isOpen, onClose, onNavigate }: TerminalMe
                 <div className="text-[10px] md:text-xs text-gray-500 space-y-1">
                   <div className="flex items-center space-x-2">
                     <span className="text-[#00ff88]">&gt;</span>
-                    <span>Press <kbd className="px-1.5 md:px-2 py-0.5 md:py-1 bg-gray-800 rounded border border-gray-700 text-[#00ff88] text-[10px] md:text-xs">1-5</kbd> for quick navigation</span>
+                    <span>Press <kbd className="px-1.5 md:px-2 py-0.5 md:py-1 bg-gray-800 rounded border border-gray-700 text-[#00ff88] text-[10px] md:text-xs">1-7</kbd> for quick navigation</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="text-[#00ff88]">&gt;</span>

@@ -31,6 +31,51 @@
         background: #484f58;
 }
 
+/* Green terminal scrollbar for admin panels */
+.scrollbar-terminal {
+        /* Firefox */
+        scrollbar-width: auto;
+        scrollbar-color: #00ff88 #1f2937;
+
+        /* Force scrollbar to always show */
+        overflow-y: scroll !important;
+}
+
+.scrollbar-terminal::-webkit-scrollbar {
+        width: 16px !important;
+        height: 16px !important;
+        /* Force it to always be visible */
+        display: block !important;
+}
+
+.scrollbar-terminal::-webkit-scrollbar-track {
+        background: #1f2937 !important;
+        border-radius: 8px;
+        margin: 2px;
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.scrollbar-terminal::-webkit-scrollbar-thumb {
+        background: #00ff88 !important;
+        border-radius: 8px;
+        border: 3px solid #1f2937;
+        min-height: 40px;
+        box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+.scrollbar-terminal::-webkit-scrollbar-thumb:hover {
+        background: #00ffaa !important;
+        box-shadow: 0 0 15px rgba(0, 255, 136, 0.8);
+}
+
+.scrollbar-terminal::-webkit-scrollbar-thumb:active {
+        background: #00cc6a !important;
+}
+
+.scrollbar-terminal::-webkit-scrollbar-corner {
+        background: #1f2937;
+}
+
 /* Smooth scrolling */
 html {
         scroll-behavior: smooth;

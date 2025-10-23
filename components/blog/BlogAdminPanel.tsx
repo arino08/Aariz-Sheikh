@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { getAllPostsAdmin, createPost, updatePost, deletePost, uploadImage } from '@/lib/blog-api';
 import { getCategories } from '@/lib/blog-api';
 import type { Database } from '@/types/supabase';
@@ -161,9 +162,9 @@ export default function BlogAdminPanel() {
             <p className="text-sm text-gray-500">Manage your blog posts and content</p>
           </div>
           <div className="flex gap-4">
-            <a href="/blog" className="px-4 py-2 border border-[#00ff88]/30 text-[#00ff88] rounded hover:bg-[#00ff88]/10 transition-colors">
+            <Link href="/blog" className="px-4 py-2 border border-[#00ff88]/30 text-[#00ff88] rounded hover:bg-[#00ff88]/10 transition-colors">
               View Blog
-            </a>
+            </Link>
             <button
               onClick={() => setShowEditor(!showEditor)}
               className="px-4 py-2 bg-[#00ff88] text-[#0D1117] rounded hover:bg-[#00d4ff] transition-colors font-bold"

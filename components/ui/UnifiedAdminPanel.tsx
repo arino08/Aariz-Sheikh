@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProjectAdminPanel from "./ProjectAdminPanel";
 import BlogAdminContent from "../blog/BlogAdminContent";
 
@@ -11,6 +11,34 @@ interface UnifiedAdminPanelProps {
 
 export default function UnifiedAdminPanel({ isOpen, onClose }: UnifiedAdminPanelProps) {
   const [activeTab, setActiveTab] = useState<'projects' | 'blog'>('projects');
+
+  // Prevent background scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      // Save current scroll position and lock body
+      const scrollY = window.scrollY;
+      const originalOverflow = document.body.style.overflow;
+      const originalPosition = document.body.style.position;
+      const originalTop = document.body.style.top;
+      const originalWidth = document.body.style.width;
+
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.documentElement.style.overflow = 'hidden';
+
+      return () => {
+        // Restore original styles and scroll position
+        document.body.style.overflow = originalOverflow;
+        document.body.style.position = originalPosition;
+        document.body.style.top = originalTop;
+        document.body.style.width = originalWidth;
+        document.documentElement.style.overflow = '';
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -24,7 +52,7 @@ export default function UnifiedAdminPanel({ isOpen, onClose }: UnifiedAdminPanel
 
       {/* Admin Panel */}
       <div className="fixed inset-0 z-[90] flex items-center justify-center p-2 md:p-4">
-        <div className="bg-[#0D1117] border-2 border-[#00ff88] rounded-lg shadow-2xl max-w-7xl w-full max-h-[95vh] md:max-h-[90vh] overflow-hidden flex flex-col">
+        <div className="bg-[#0D1117] border-2 border-[#00ff88] rounded-lg shadow-2xl max-w-7xl w-full max-h-[95vh] md:max-h-[90vh] overflow-hidden flex flex-col overscroll-contain">
           {/* Header with Tabs */}
           <div className="bg-[#161b22] border-b border-[#00ff88]/30">
             <div className="flex items-center justify-between px-3 md:px-6 py-3 md:py-4">
@@ -81,7 +109,7 @@ export default function UnifiedAdminPanel({ isOpen, onClose }: UnifiedAdminPanel
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-hidden">
+          <div className="flex-1 overflow-hidden overscroll-contain scrollbar-terminal">
             {activeTab === 'projects' && <ProjectAdminPanel />}
             {activeTab === 'blog' && <BlogAdminContent />}
           </div>

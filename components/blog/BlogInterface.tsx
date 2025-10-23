@@ -42,7 +42,6 @@ export default function BlogInterface() {
   const [isLoading, setIsLoading] = useState(true);
   const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
   const [selectedPostIndex, setSelectedPostIndex] = useState<number>(-1);
-  const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -166,13 +165,12 @@ export default function BlogInterface() {
         }
       } else if (e.key === 'Enter') {
         if (selectedPost) {
-          // Open full post (you can navigate to /blog/[slug] here)
-          window.open(`/blog/${selectedPost.slug}`, '_blank');
+          // Navigate to full post page
+          window.location.href = `/blog/${selectedPost.slug}`;
         }
       } else if (e.key === 'Escape') {
         setSelectedPost(null);
         setSelectedPostIndex(-1);
-        setIsMobilePreviewOpen(false);
       }
     };
 
@@ -183,7 +181,6 @@ export default function BlogInterface() {
   // Handle post selection
   const handlePostSelect = (post: BlogPost) => {
     setSelectedPost(post);
-    setIsMobilePreviewOpen(true);
 
     // Update selected index
     const currentPosts = selectedCategory
@@ -220,8 +217,8 @@ export default function BlogInterface() {
       className="fixed inset-0 bg-[#0D1117] overflow-hidden"
     >
       {/* Minimal Header - Logo + Terminal Menu (compact) */}
-      <header className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3 bg-[#0D1117]/80 backdrop-blur-sm border-b border-[#00ff88]/10">
-        <Link href="/" className="blog-header-logo text-[#00ff88] font-mono text-lg md:text-xl hover:text-[#00d4ff] transition-colors">
+      <header className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-6 py-3 bg-[#0D1117]/80 backdrop-blur-sm border-b border-[#00ff88]/10">
+        <Link href="/" className="blog-header-logo text-[#00ff88] font-mono text-base sm:text-lg md:text-xl hover:text-[#00d4ff] transition-colors">
           AS_
         </Link>
         {/* compact prop ensures Navigation only shows the terminal toggle (no full nav links) */}
@@ -236,9 +233,9 @@ export default function BlogInterface() {
       </div>
 
   {/* Main Container - with top padding for header */}
-  <div className="relative z-10 h-full flex pt-14 md:pt-16">
+  <div className="relative z-10 h-full flex flex-col lg:flex-row pt-14 md:pt-16">
         {/* Left Panel - Navigation */}
-        <div className="category-panel-container w-full lg:w-[35%] xl:w-[30%] h-full flex-shrink-0 relative">
+        <div className="category-panel-container w-full lg:w-[35%] xl:w-[30%] h-[50vh] lg:h-full flex-shrink-0 relative overflow-hidden">
           <CategoryPanel
             categories={categories}
             selectedCategory={selectedCategory}
@@ -252,44 +249,19 @@ export default function BlogInterface() {
           />
         </div>
 
-        {/* Right Panel - Content Preview (Desktop) */}
+        {/* Right Panel - Content Preview (Desktop and Tablet landscape) */}
         <div className="content-preview-container hidden lg:flex lg:w-[65%] xl:w-[70%] h-full">
           <ContentPreview post={selectedPost} />
         </div>
 
-        {/* Mobile Bottom Drawer - Content Preview */}
-        {isMobilePreviewOpen && selectedPost && (
-          <div className="lg:hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm" onClick={() => setIsMobilePreviewOpen(false)}>
-            <div
-              className="absolute bottom-0 left-0 right-0 bg-[#0D1117] rounded-t-2xl border-t-2 border-[#00ff88]/30 max-h-[85vh] overflow-hidden animate-slide-up"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Drawer handle */}
-              <div className="flex justify-center py-2 border-b border-gray-800">
-                <div className="w-12 h-1 bg-gray-600 rounded-full" />
-              </div>
-
-              {/* Close button */}
-              <button
-                onClick={() => setIsMobilePreviewOpen(false)}
-                className="absolute top-4 right-4 text-gray-400 hover:text-[#00ff88] z-10"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-
-              {/* Content */}
-              <div className="overflow-y-auto h-full">
-                <ContentPreview post={selectedPost} />
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Mobile Content Preview (below categories) */}
+        <div className="content-preview-container lg:hidden w-full h-[50vh] overflow-hidden">
+          <ContentPreview post={selectedPost} />
+        </div>
       </div>
 
-      {/* Keyboard shortcuts hint */}
-      <div className="hidden md:block fixed bottom-4 left-4 font-mono text-xs text-gray-600 space-y-1">
+      {/* Keyboard shortcuts hint - Hidden on mobile */}
+      <div className="hidden md:block fixed bottom-4 left-4 font-mono text-xs text-gray-600 space-y-1 z-20">
         <div>↑↓ Navigate</div>
         <div>Enter Open</div>
         <div>Esc Close</div>

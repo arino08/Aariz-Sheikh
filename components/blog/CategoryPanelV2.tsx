@@ -111,6 +111,9 @@ export default function CategoryPanel({
     setDisplayedPosts([]);
     setCompilationOutput([]);
 
+    // Filter posts for this category
+    const categoryPosts = posts.filter(p => p.category === category.id);
+
     // Create particle explosion
     const newParticles = Array.from({ length: 30 }, (_, i) => ({
       id: Date.now() + i,
@@ -129,7 +132,7 @@ export default function CategoryPanel({
       `Compiling blog posts...`,
       `[████████████████████] 100%`,
       ``,
-      `✓ Found ${posts.length} posts`,
+      `✓ Found ${categoryPosts.length} posts`,
       `✓ Syntax validated`,
       `✓ Metadata parsed`,
       ``,
@@ -151,9 +154,9 @@ export default function CategoryPanel({
     await new Promise(resolve => setTimeout(resolve, 200));
     setCompilationStage('displaying');
 
-    for (let i = 0; i < posts.length; i++) {
+    for (let i = 0; i < categoryPosts.length; i++) {
       await new Promise(resolve => setTimeout(resolve, 120));
-      setDisplayedPosts(prev => [...prev, posts[i]]);
+      setDisplayedPosts(prev => [...prev, categoryPosts[i]]);
     }
   };
 
@@ -189,7 +192,7 @@ export default function CategoryPanel({
 
       <div className="flex-1 overflow-hidden flex flex-col">
         {/* Categories Section */}
-        <div className={`transition-all duration-500 ${selectedCategory ? 'h-auto' : 'flex-1'} overflow-y-auto p-4 custom-scrollbar`}>
+        <div className={`transition-all duration-500 ${selectedCategory ? 'h-[30%] min-h-[120px]' : 'flex-1'} overflow-y-auto p-4 custom-scrollbar`}>
           {/* Terminal Prompt */}
           <div className="font-mono text-xs md:text-sm text-gray-400 mb-4">
             <span className="text-[#00ff88]">user@blog</span>

@@ -9,6 +9,7 @@ export default function ProjectAdminPanel() {
   const [isEditing, setIsEditing] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Form state
   const [formData, setFormData] = useState({
@@ -22,6 +23,13 @@ export default function ProjectAdminPanel() {
     featured: false,
     status: "active" as "active" | "archived" | "draft",
   });
+
+  // Filter projects based on search
+  const filteredProjects = projects.filter((project) =>
+    project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    project.short_description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    project.tech_stack.some((tech) => tech.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
 
   // Load projects
   useEffect(() => {
@@ -161,13 +169,35 @@ export default function ProjectAdminPanel() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto p-3 md:p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-        {/* Left Column - Form */}
-        <div className="space-y-3 md:space-y-4">
-          <h3 className="font-mono text-lg md:text-xl text-[#00ff88] mb-3 md:mb-4">
-            {isEditing ? "Edit Project" : "Add New Project"}
-          </h3>
+    <div className="flex-1 overflow-hidden flex flex-col">
+      {/* Search Bar */}
+      <div className="px-3 md:px-6 py-3 md:py-4 border-b border-gray-700">
+        <div className="relative">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search projects by title, description, or tech stack..."
+            className="w-full bg-[#161b22] border border-gray-700 rounded px-3 py-2 pl-10 text-white font-mono text-sm focus:outline-none focus:border-[#00ff88] transition-colors"
+          />
+          <svg
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto p-3 md:p-6 scrollbar-terminal">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+          {/* Left Column - Form */}
+          <div className="space-y-3 md:space-y-4">
+            <h3 className="font-mono text-lg md:text-xl text-[#00ff88] mb-3 md:mb-4">
+              {isEditing ? "Edit Project" : "Add New Project"}
+            </h3>
 
           <form onSubmit={handleSubmit} className="space-y-3 md:space-y-4">
             {/* Title */}
@@ -329,14 +359,18 @@ export default function ProjectAdminPanel() {
         {/* Right Column - Project List */}
         <div className="space-y-4">
           <h3 className="font-mono text-base md:text-xl text-[#00ff88] mb-3 md:mb-4">
-            Existing Projects ({projects.length})
+            Existing Projects ({filteredProjects.length}{searchQuery && ` of ${projects.length}`})
           </h3>
 
           {isLoading ? (
             <div className="text-gray-400 font-mono text-xs md:text-sm">Loading...</div>
+          ) : filteredProjects.length === 0 ? (
+            <div className="text-gray-400 font-mono text-xs md:text-sm text-center py-8">
+              {searchQuery ? "No projects match your search" : "No projects yet"}
+            </div>
           ) : (
-            <div className="space-y-2 md:space-y-3 max-h-[500px] md:max-h-[600px] overflow-y-auto">
-              {projects.map((project) => (
+            <div className="space-y-2 md:space-y-3">
+              {filteredProjects.map((project) => (
                 <div
                   key={project.id}
                   className="bg-[#161b22] border border-gray-700 rounded p-3 md:p-4 hover:border-[#00ff88]/50 transition-colors"
@@ -379,6 +413,7 @@ export default function ProjectAdminPanel() {
             </div>
           )}
         </div>
+      </div>
       </div>
     </div>
   );

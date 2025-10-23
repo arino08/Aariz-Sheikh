@@ -99,7 +99,18 @@ export default function Navigation({ compact = false }: NavigationProps) {
         };
 
         const handleNavigation = (sectionId: string) => {
-                scrollToSection(sectionId);
+                // Check if we're on the homepage
+                if (typeof window !== "undefined") {
+                        const isHomePage = window.location.pathname === "/";
+
+                        if (isHomePage) {
+                                // If on homepage, scroll to section
+                                scrollToSection(sectionId);
+                        } else {
+                                // If on another page, navigate to homepage with hash
+                                window.location.href = `/#${sectionId}`;
+                        }
+                }
                 setIsMenuOpen(false);
         };
 

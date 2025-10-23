@@ -271,17 +271,34 @@ export default function ContentPreview({ post }: ContentPreviewProps) {
 
           {/* CTA Button */}
           <div className="flex flex-col sm:flex-row gap-4">
-            <button className="group relative flex-1 sm:flex-none font-mono text-sm md:text-base bg-[#00ff88] text-[#0D1117] px-8 py-4 rounded-lg hover:bg-[#00ff88]/90 transition-all duration-300 font-bold overflow-hidden">
+            <a
+              href={`/blog/${post.slug}`}
+              className="group relative flex-1 sm:flex-none font-mono text-sm md:text-base bg-[#00ff88] text-[#0D1117] px-8 py-4 rounded-lg hover:bg-[#00ff88]/90 transition-all duration-300 font-bold overflow-hidden block text-center"
+            >
               <span className="relative z-10 flex items-center justify-center">
                 <span className="group-hover:hidden">$ read --full</span>
                 <span className="hidden group-hover:inline">→ Open Article</span>
               </span>
               {/* Scanline effect */}
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/10 to-transparent h-full animate-scanline opacity-0 group-hover:opacity-100" />
-            </button>
+            </a>
 
-            <button className="font-mono text-sm md:text-base border-2 border-[#00d4ff] text-[#00d4ff] px-6 py-4 rounded-lg hover:bg-[#00d4ff] hover:text-[#0D1117] transition-all duration-300">
-              <span className="hidden sm:inline">$ git clone</span>
+            <button
+              onClick={() => {
+                if (navigator.share) {
+                  navigator.share({
+                    title: post.title,
+                    text: post.description,
+                    url: `/blog/${post.slug}`,
+                  });
+                } else {
+                  navigator.clipboard.writeText(`${window.location.origin}/blog/${post.slug}`);
+                  alert('Link copied to clipboard!');
+                }
+              }}
+              className="font-mono text-sm md:text-base border-2 border-[#00d4ff] text-[#00d4ff] px-6 py-4 rounded-lg hover:bg-[#00d4ff] hover:text-[#0D1117] transition-all duration-300"
+            >
+              <span className="hidden sm:inline">$ share --post</span>
               <span className="sm:hidden">Share</span>
             </button>
           </div>
