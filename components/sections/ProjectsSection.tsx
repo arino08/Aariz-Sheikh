@@ -268,14 +268,6 @@ export default function ProjectsSection() {
               <div className="text-[var(--terminal-orange)] font-mono text-xl mb-4">
                 No projects yet
               </div>
-              <p className="text-[var(--code-comment)] font-mono text-sm">
-                <span className="hidden sm:inline">
-                  Press <kbd className="px-2 py-1 bg-gray-800 rounded">Ctrl+K</kbd> to add projects
-                </span>
-                <span className="sm:hidden">
-                  Triple-tap the copyright at the bottom to add projects
-                </span>
-              </p>
             </div>
           </div>
         )}

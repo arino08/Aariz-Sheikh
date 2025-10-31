@@ -21,15 +21,13 @@ export default function Home() {
                                         <AboutSection />
                                 </div>
 
-                                <div id="skills">
-                                        <SkillsSection />
-                                </div>
+				<div id="skills">
+					<SkillsSection />
+				</div>
 
-                                <div id="projects">
-                                        <ProjectsSection />
-                                </div>
-
-                                <div id="contact">
+				<div id="projects">
+					<ProjectsSection />
+				</div>                                <div id="contact">
                                         <ContactSection />
                                 </div>
                         </main>

@@ -24,11 +24,11 @@ export default function StoryCard({ certification }: StoryCardProps) {
     };
   }, [certification.id]);
 
-  const statusColor = 
+  const statusColor =
     certification.status === 'completed' ? '#00ff88' :
     certification.status === 'in-progress' ? '#00d4ff' : '#8b949e';
 
-  const statusText = 
+  const statusText =
     certification.status === 'completed' ? 'Completed' :
     certification.status === 'in-progress' ? 'In Progress' : 'Planned';
 
@@ -36,8 +36,8 @@ export default function StoryCard({ certification }: StoryCardProps) {
     <div className={`
       h-full overflow-y-auto
       transition-all duration-600 ease-out
-      ${isVisible 
-        ? 'opacity-100 translate-x-0 blur-0' 
+      ${isVisible
+        ? 'opacity-100 translate-x-0 blur-0'
         : 'opacity-0 translate-x-12 blur-sm'
       }
     `}>
@@ -75,11 +75,11 @@ export default function StoryCard({ certification }: StoryCardProps) {
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-2">
-                <div 
+                <div
                   className="px-3 py-1 rounded-full text-xs font-mono border"
-                  style={{ 
+                  style={{
                     borderColor: statusColor,
                     backgroundColor: `${statusColor}20`,
                     color: statusColor
@@ -103,7 +103,7 @@ export default function StoryCard({ certification }: StoryCardProps) {
               <h2 className="text-lg font-bold text-[#00d4ff] font-mono border-l-4 border-[#00d4ff] pl-3">
                 THE STUDENT JOURNEY
               </h2>
-              
+
               <div className="space-y-4 pl-4">
                 <div>
                   <div className="text-sm font-semibold text-[#ff8c00] font-mono mb-2">💡 THE SPARK:</div>
@@ -116,7 +116,7 @@ export default function StoryCard({ certification }: StoryCardProps) {
                   <div className="text-sm font-semibold text-[#ff8c00] font-mono mb-2">📚 THE DEDICATION:</div>
                   <ul className="space-y-1.5">
                     {certification.story.theDedication.map((item, index) => (
-                      <li 
+                      <li
                         key={index}
                         className="text-[#c9d1d9] text-sm flex items-start gap-2 transition-all duration-300"
                         style={{ transitionDelay: `${index * 100}ms` }}
@@ -153,7 +153,7 @@ export default function StoryCard({ certification }: StoryCardProps) {
                   <div className="text-sm font-semibold text-[#ff8c00] font-mono mb-2">🛠️ Technical Skills Mastered:</div>
                   <div className="flex flex-wrap gap-2">
                     {certification.skillsMastered.map((skill, index) => (
-                      <span 
+                      <span
                         key={index}
                         className="px-2 py-1 bg-[#238636]/20 border border-[#238636] text-[#00ff88] text-xs font-mono rounded hover:bg-[#238636]/30 transition-colors"
                       >
@@ -190,12 +190,12 @@ export default function StoryCard({ certification }: StoryCardProps) {
             </section>
 
             {/* Verification & Proof Section */}
-            {(certification.verification.certificateUrl || 
-              certification.verification.projectLinks?.length || 
+            {(certification.verification.certificateUrl ||
+              certification.verification.projectLinks?.length ||
               certification.verification.liveDemo) && (
               <>
                 <div className="h-px bg-gradient-to-r from-transparent via-[#30363d] to-transparent" />
-                
+
                 <section className={`
                   space-y-4 transition-all duration-500 delay-300
                   ${typingComplete ? 'opacity-100' : 'opacity-0'}

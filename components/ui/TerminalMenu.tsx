@@ -18,8 +18,7 @@ const navigationItems = [
   { id: "skills", label: "SKILLS", number: 3 },
   { id: "projects", label: "PROJECTS", number: 4 },
   { id: "blog", label: "BLOG", number: 5, isExternal: true },
-  { id: "certifications", label: "CERTIFICATIONS", number: 6, isExternal: true },
-  { id: "contact", label: "CONTACT", number: 7 },
+  { id: "contact", label: "CONTACT", number: 6 },
 ];
 
 const RANDOM_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?/~`";
@@ -58,9 +57,9 @@ export default function TerminalMenu({ isOpen, onClose, onNavigate }: TerminalMe
         return;
       }
 
-      // Number keys 1-7 for navigation (only when ready)
-      if (stage === 'ready' && /^[1-7]$/.test(e.key)) {
-        const itemNumber = parseInt(e.key);
+      // Number keys 1-6 for navigation (only when ready)
+      if (stage === 'ready' && /^[1-6]$/.test(e.key)) {
+        const itemNumber = parseInt(e.key, 10);
         const item = navigationItems.find(i => i.number === itemNumber);
         if (item) {
           handleNavClick(item);

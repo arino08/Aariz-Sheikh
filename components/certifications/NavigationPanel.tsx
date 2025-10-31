@@ -11,17 +11,17 @@ interface NavigationPanelProps {
   onSelect: (id: string) => void;
 }
 
-export default function NavigationPanel({ 
-  certifications, 
-  stats, 
+export default function NavigationPanel({
+  certifications,
+  stats,
   selectedId,
-  onSelect 
+  onSelect
 }: NavigationPanelProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
     <div className={`
-      h-full bg-[#0D1117] border-r border-[#30363d] 
+      h-full bg-[#0D1117] border-r border-[#30363d]
       flex flex-col overflow-hidden
       transition-all duration-300 ease-out
       ${isCollapsed ? 'w-16' : 'w-full'}
@@ -91,10 +91,10 @@ export default function NavigationPanel({
             <div className="space-y-2">
               {certifications.map((cert) => {
                 const isSelected = cert.id === selectedId;
-                const statusIcon = 
+                const statusIcon =
                   cert.status === 'completed' ? '✨' :
                   cert.status === 'in-progress' ? '🔄' : '📋';
-                
+
                 return (
                   <button
                     key={cert.id}
@@ -104,8 +104,8 @@ export default function NavigationPanel({
                       font-mono text-xs
                       transition-all duration-300 ease-out
                       border border-transparent
-                      ${isSelected 
-                        ? 'bg-[#00ff88]/10 border-[#00ff88] shadow-[0_0_10px_rgba(0,255,136,0.2)] scale-[1.02]' 
+                      ${isSelected
+                        ? 'bg-[#00ff88]/10 border-[#00ff88] shadow-[0_0_10px_rgba(0,255,136,0.2)] scale-[1.02]'
                         : 'hover:bg-[#30363d]/50 hover:border-[#30363d] hover:scale-[1.01] hover:shadow-lg'
                       }
                     `}
@@ -151,26 +151,26 @@ export default function NavigationPanel({
               💡 Click any certification to explore the story
             </div>
             <div className="flex flex-wrap gap-2">
-              <Link 
+              <Link
                 href="/contact"
                 className="px-2 py-1 bg-[#238636] hover:bg-[#2ea043] text-white text-[10px] font-mono rounded transition-colors"
               >
                 📧 Contact
               </Link>
-              <Link 
+              <Link
                 href="#"
                 className="px-2 py-1 bg-[#8b5cf6] hover:bg-[#9d6fff] text-white text-[10px] font-mono rounded transition-colors"
               >
                 📄 Resume
               </Link>
-              <Link 
+              <Link
                 href="https://linkedin.com"
                 target="_blank"
                 className="px-2 py-1 bg-[#0077b5] hover:bg-[#0088cc] text-white text-[10px] font-mono rounded transition-colors"
               >
                 🔗 LinkedIn
               </Link>
-              <Link 
+              <Link
                 href="https://github.com"
                 target="_blank"
                 className="px-2 py-1 bg-[#30363d] hover:bg-[#484f58] text-white text-[10px] font-mono rounded transition-colors"

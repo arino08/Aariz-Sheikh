@@ -8,7 +8,7 @@ import { certificationData } from '@/lib/certificationsData';
 
 export default function CertificationsView() {
   const [selectedId, setSelectedId] = useState<string>(certificationData.certifications[0].id);
-  
+
   const selectedCertification = certificationData.certifications.find(
     cert => cert.id === selectedId
   );
@@ -19,7 +19,7 @@ export default function CertificationsView() {
       <header className="border-b border-[#30363d] bg-[#161b22] sticky top-0 z-50">
         <div className="max-w-[2000px] mx-auto px-6 py-4 flex items-center justify-between">
           <div>
-            <Link 
+            <Link
               href="/"
               className="inline-flex items-center gap-2 text-[#00ff88] hover:text-[#00d4ff] transition-colors font-mono text-sm"
             >
@@ -31,7 +31,7 @@ export default function CertificationsView() {
               <span className="text-[#8b949e]"> / Learning Journey</span>
             </h1>
           </div>
-          
+
           {/* Stats Badge */}
           <div className="hidden md:flex items-center gap-4 text-xs font-mono">
             <div className="px-3 py-1.5 bg-[#238636]/20 border border-[#238636] rounded text-[#00ff88]">
