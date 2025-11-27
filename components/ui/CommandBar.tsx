@@ -726,26 +726,7 @@ export default function CommandBar() {
 
   // Floating button when closed - hidden on mobile (sprite handles it)
   if (!isOpen) {
-    // On mobile, return null - the sprite guide handles opening command palette
-    if (isMobile) {
-      return null;
-    }
-
-    return (
-      <button
-        onClick={openCommandBar}
-        className="fixed bottom-6 right-6 z-[9990] font-mono text-xs bg-[#161B22] border border-[var(--terminal-green)]/30 px-4 py-3 rounded-xl text-[var(--terminal-green)] hover:border-[var(--terminal-green)] transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,255,136,0.2)] group flex items-center gap-3"
-        style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.5)" }}
-      >
-        <span className="text-base">⌨</span>
-        <span className="hidden sm:inline">Command</span>
-        <kbd className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 bg-black/30 rounded text-[10px] text-gray-400 border border-gray-700">
-          <span>Ctrl</span>
-          <span>Space</span>
-        </kbd>
-        <span className="absolute -top-1 -right-1 w-2 h-2 bg-[var(--terminal-green)] rounded-full animate-pulse" />
-      </button>
-    );
+    return null;
   }
 
   return (
