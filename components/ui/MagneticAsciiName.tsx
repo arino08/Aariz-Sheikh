@@ -215,13 +215,7 @@ export default function MagneticAsciiName({
 
     return {
       color: baseColor,
-      textShadow: enableGlow
-        ? `
-          0 0 5px ${glowColor},
-          0 0 10px ${glowColor},
-          0 0 20px ${glowColor}
-        `
-        : "none",
+      textShadow: enableGlow ? `0 0 3px ${glowColor}` : "none",
     };
   };
 
@@ -237,9 +231,9 @@ export default function MagneticAsciiName({
       onMouseEnter={() => setIsHovered(true)}
       style={{
         perspective: "1000px",
-        overflowX: isMobile ? "auto" : "visible",
+        overflow: "hidden",
         maxWidth: "100%",
-        WebkitOverflowScrolling: "touch",
+        width: "100%",
       }}
     >
       {/* Main ASCII art */}
@@ -247,12 +241,15 @@ export default function MagneticAsciiName({
         className="font-mono leading-tight text-center"
         style={{
           fontSize: isMobile
-            ? "clamp(0.35rem, 2.5vw, 0.55rem)"
+            ? "clamp(0.45rem, 2.8vw, 0.65rem)"
             : "clamp(0.7rem, 2.5vw, 1.4rem)",
-          letterSpacing: isMobile ? "-0.03em" : "0.08em",
-          lineHeight: isMobile ? 1.05 : 1.2,
+          letterSpacing: isMobile ? "-0.01em" : "0.08em",
+          lineHeight: isMobile ? 1.1 : 1.2,
           whiteSpace: "pre",
-          minWidth: isMobile ? "max-content" : "auto",
+          overflow: "hidden",
+          WebkitFontSmoothing: "antialiased",
+          MozOsxFontSmoothing: "grayscale",
+          textRendering: "geometricPrecision",
         }}
       >
         {asciiLines.map((line, rowIndex) => (

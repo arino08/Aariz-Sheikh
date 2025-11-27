@@ -90,8 +90,8 @@ export default function LivePresence({
 
   // Position classes - top positions moved down to avoid overlapping nav buttons
   const positionClasses = {
-    "top-right": "top-16 right-4",
-    "top-left": "top-16 left-4",
+    "top-right": "top-20 right-4",
+    "top-left": "top-20 left-4",
     "bottom-right": "bottom-4 right-4",
     "bottom-left": "bottom-4 left-4",
   };
@@ -262,35 +262,35 @@ export default function LivePresence({
           style={{ pointerEvents: "auto" }}
         >
           <div
-            className="flex items-center gap-2 bg-[#0D1117]/90 backdrop-blur-sm border border-[#00ff88]/30 rounded-full px-3 py-1.5 shadow-lg"
+            className="flex items-center gap-1 bg-[#0D1117]/90 backdrop-blur-sm border border-[#00ff88]/30 rounded-full px-1.5 py-0.5 shadow-lg"
             style={{
               boxShadow: isConnected
-                ? "0 0 20px rgba(0, 255, 136, 0.2)"
+                ? "0 0 8px rgba(0, 255, 136, 0.1)"
                 : "none",
             }}
           >
             {/* Connection indicator */}
             <div className="relative">
               <div
-                className={`w-2 h-2 rounded-full ${
+                className={`w-1 h-1 rounded-full ${
                   isConnected ? "bg-[#00ff88]" : "bg-gray-500"
                 }`}
               />
               {isConnected && (
-                <div className="absolute inset-0 w-2 h-2 rounded-full bg-[#00ff88] animate-ping opacity-75" />
+                <div className="absolute inset-0 w-1 h-1 rounded-full bg-[#00ff88] animate-ping opacity-75" />
               )}
             </div>
 
             {/* Counter */}
-            <span className="font-mono text-xs text-[#00ff88]">
+            <span className="font-mono text-[8px] text-[#00ff88]">
               <span className="text-white font-bold">{visitorCount}</span>
-              <span className="text-[#6b7280] ml-1">
+              <span className="text-[#6b7280] ml-0.5">
                 {visitorCount === 1 ? "viewer" : "viewers"}
               </span>
             </span>
 
             {/* Live indicator */}
-            <span className="font-mono text-[10px] text-[#00ff88] uppercase tracking-wider opacity-70">
+            <span className="font-mono text-[6px] text-[#00ff88] uppercase tracking-wider opacity-70">
               live
             </span>
           </div>

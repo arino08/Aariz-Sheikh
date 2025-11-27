@@ -30,7 +30,7 @@ function usePerformanceSettings() {
     const checkSettings = () => {
       try {
         const savedSettings = localStorage.getItem(
-          "portfolio-performance-settings"
+          "portfolio-performance-settings",
         );
         if (savedSettings) {
           const parsed = JSON.parse(savedSettings);
@@ -116,7 +116,7 @@ export default function HeroAvatar({
 
           // Check if pixel is within circle
           const distFromCenter = Math.sqrt(
-            Math.pow(pixelX - size / 2, 2) + Math.pow(pixelY - size / 2, 2)
+            Math.pow(pixelX - size / 2, 2) + Math.pow(pixelY - size / 2, 2),
           );
 
           if (distFromCenter > size / 2 || a < 128) {
@@ -126,7 +126,7 @@ export default function HeroAvatar({
 
           const brightness = (r + g + b) / 3;
           const charIndex = Math.floor(
-            (brightness / 255) * (ASCII_CHARS.length - 1)
+            (brightness / 255) * (ASCII_CHARS.length - 1),
           );
           row.push(ASCII_CHARS[charIndex]);
         }
@@ -135,7 +135,7 @@ export default function HeroAvatar({
 
       setAsciiArt(ascii);
     },
-    [size]
+    [size],
   );
 
   // Load image
@@ -199,7 +199,7 @@ export default function HeroAvatar({
         onComplete: () => {
           setHasAnimated(true);
         },
-      }
+      },
     );
   }, [enableAnimations, enableMorph, hasAnimated]);
 
@@ -216,7 +216,7 @@ export default function HeroAvatar({
         onUpdate: function () {
           setMorphProgress(this.targets()[0].progress);
         },
-      }
+      },
     );
   }, [enableAnimations, hasAnimated]);
 
@@ -233,7 +233,7 @@ export default function HeroAvatar({
         onUpdate: function () {
           setMorphProgress(this.targets()[0].progress);
         },
-      }
+      },
     );
   }, [enableAnimations, hasAnimated, morphProgress]);
 
@@ -245,7 +245,14 @@ export default function HeroAvatar({
       }, autoPlayDelay * 1000);
       return () => clearTimeout(timer);
     }
-  }, [autoPlay, autoPlayDelay, imageLoaded, showTerminal, hasAnimated, startMorph]);
+  }, [
+    autoPlay,
+    autoPlayDelay,
+    imageLoaded,
+    showTerminal,
+    hasAnimated,
+    startMorph,
+  ]);
 
   // Handle hover
   const handleMouseEnter = () => {
@@ -329,7 +336,7 @@ export default function HeroAvatar({
           }}
         >
           <pre
-            className="font-mono leading-none select-none text-center"
+            className="font-mono leading-none select-none text-center overflow-hidden"
             style={{
               fontSize: "6px",
               lineHeight: "6px",
@@ -433,15 +440,13 @@ export default function HeroAvatar({
       <div
         className="absolute -bottom-1 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-[#0D1117] px-2 py-0.5 rounded-full border border-[#00ff88]/30 z-40"
         style={{
-          boxShadow: enableGlow
-            ? "0 0 10px rgba(0, 255, 136, 0.3)"
-            : "none",
+          boxShadow: enableGlow ? "0 0 10px rgba(0, 255, 136, 0.3)" : "none",
         }}
       >
         <div
           className={`w-1.5 h-1.5 rounded-full bg-[#00ff88] ${enableAnimations ? "animate-pulse" : ""}`}
         />
-        <span className="font-mono text-[8px] text-[#00ff88] uppercase tracking-wider">
+        <span className="font-mono text-[6px] text-[#00ff88] uppercase tracking-wider">
           {isHovered ? "ASCII Mode" : hasAnimated ? "Online" : "Booting..."}
         </span>
       </div>
