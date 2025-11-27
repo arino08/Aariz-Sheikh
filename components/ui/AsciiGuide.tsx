@@ -565,7 +565,7 @@ export default function AsciiGuide({
                 }}
                 className="absolute -bottom-2 right-2 font-mono text-[10px] text-[var(--terminal-green)]/60 hover:text-[var(--terminal-green)] transition-colors"
               >
-                [next →]
+                [→]
               </button>
 
               {/* Speech bubble tail */}

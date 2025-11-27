@@ -38,6 +38,18 @@ export default function HeroSection() {
   const avatarRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
 
+  // Check if mobile for responsive sizing
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   // Get performance settings
   const { settings } = usePerformance();
 
@@ -363,13 +375,13 @@ export default function HeroSection() {
         ref={contentRef}
         className="relative z-10 flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 px-4 py-20 max-w-7xl mx-auto w-full"
       >
-        {/* TUI Avatar with Parallax */}
+        {/* TUI Avatar with Parallax - Responsive sizing */}
         {settings.enableParallax ? (
           <ParallaxLayer speed={0.2} direction="up" className="flex-shrink-0">
             <div ref={avatarRef}>
               <HeroAvatar
                 src="/assets/devpfp.jpg"
-                size={360}
+                size={isMobile ? 220 : 360}
                 enableMorph={settings.enableAnimations}
                 autoPlay={true}
                 autoPlayDelay={1.5}
@@ -380,7 +392,7 @@ export default function HeroSection() {
           <div ref={avatarRef} className="flex-shrink-0">
             <HeroAvatar
               src="/assets/devpfp.jpg"
-              size={360}
+              size={isMobile ? 220 : 360}
               enableMorph={settings.enableAnimations}
               autoPlay={true}
               autoPlayDelay={1.5}
@@ -451,7 +463,7 @@ export default function HeroSection() {
     return (
       <>
         {/* Greeting */}
-        <div className="font-mono text-sm md:text-base text-[var(--terminal-green)] mb-4 flex items-center justify-center lg:justify-start gap-2">
+        <div className="font-mono text-xs sm:text-sm md:text-base text-[var(--terminal-green)] mb-3 sm:mb-4 flex items-center justify-center lg:justify-start gap-2">
           <span
             className={`inline-block w-3 h-3 bg-[var(--terminal-green)] rounded-full ${settings.enableAnimations ? "animate-pulse" : ""}`}
             style={{
@@ -464,7 +476,7 @@ export default function HeroSection() {
         </div>
 
         {/* ASCII Art Name - Magnetic & Glitchy */}
-        <div className="mb-6 flex justify-center lg:justify-start">
+        <div className="mb-4 sm:mb-6 flex justify-center lg:justify-start overflow-x-auto max-w-full">
           <MagneticAsciiName
             color="var(--terminal-green)"
             glowColor="var(--terminal-green)"
@@ -480,14 +492,14 @@ export default function HeroSection() {
         <h1 className="sr-only">Aariz Sheikh - Full-Stack Developer</h1>
 
         {/* Role */}
-        <div className="font-mono text-xl md:text-2xl text-white mb-6 flex items-center justify-center lg:justify-start gap-3">
+        <div className="font-mono text-lg sm:text-xl md:text-2xl text-white mb-4 sm:mb-6 flex items-center justify-center lg:justify-start gap-2 sm:gap-3">
           <span className="text-[var(--terminal-orange)]">&lt;</span>
           <span>Full-Stack Developer</span>
           <span className="text-[var(--terminal-orange)]">/&gt;</span>
         </div>
 
         {/* Description in code style with Typewriter effect */}
-        <div className="font-mono text-sm md:text-base text-[var(--code-comment)] mb-8 space-y-1">
+        <div className="font-mono text-xs sm:text-sm md:text-base text-[var(--code-comment)] mb-6 sm:mb-8 space-y-1">
           <p className="flex items-start justify-center lg:justify-start">
             <span className="text-[var(--terminal-purple)] mr-1">{"// "}</span>
             <span className="whitespace-pre-wrap">{line1Text}</span>
@@ -501,7 +513,7 @@ export default function HeroSection() {
         </div>
 
         {/* CTA Buttons with Magnetic Effect */}
-        <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
+        <div className="flex flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start">
           <MagneticButton
             variant="primary"
             size="md"
@@ -530,12 +542,12 @@ export default function HeroSection() {
         </div>
 
         {/* Tech stack pills */}
-        <div className="mt-8 flex flex-wrap gap-2 justify-center lg:justify-start">
+        <div className="mt-6 sm:mt-8 flex flex-wrap gap-1.5 sm:gap-2 justify-center lg:justify-start">
           {["React", "Next.js", "Rust", "TypeScript", "Node.js"].map(
             (tech, index) => (
               <span
                 key={tech}
-                className="font-mono text-xs px-3 py-1 rounded-full border border-gray-700 text-gray-400 hover:border-[var(--terminal-green)]/50 hover:text-[var(--terminal-green)] transition-all duration-300 cursor-default"
+                className="font-mono text-[10px] sm:text-xs px-2 sm:px-3 py-1 rounded-full border border-gray-700 text-gray-400 hover:border-[var(--terminal-green)]/50 hover:text-[var(--terminal-green)] transition-all duration-300 cursor-default"
                 style={{
                   animationDelay: settings.enableAnimations
                     ? `${index * 0.1}s`

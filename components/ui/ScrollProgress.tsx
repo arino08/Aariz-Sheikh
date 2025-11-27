@@ -131,7 +131,7 @@ export function VerticalScrollProgress({
       // Calculate active section
       if (sections.length > 0) {
         const sectionIndex = Math.floor(
-          (scrollPercent / 100) * sections.length
+          (scrollPercent / 100) * sections.length,
         );
         setActiveSection(Math.min(sections.length - 1, sectionIndex));
       }
@@ -180,8 +180,7 @@ export function VerticalScrollProgress({
                     : "opacity-50 hover:opacity-100"
                 }`}
                 style={{
-                  backgroundColor:
-                    index === activeSection ? color : "gray",
+                  backgroundColor: index === activeSection ? color : "gray",
                   boxShadow:
                     index === activeSection ? `0 0 8px ${color}` : "none",
                 }}

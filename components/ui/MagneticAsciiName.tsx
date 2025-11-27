@@ -4,7 +4,8 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { gsap } from "gsap";
 
 // Large ASCII art name
-const ASCII_NAME_LARGE = [
+// ASCII art name - same for all screen sizes
+const ASCII_NAME = [
   " █████╗  █████╗ ██████╗ ██╗███████╗",
   "██╔══██╗██╔══██╗██╔══██╗██║╚══███╔╝",
   "███████║███████║██████╔╝██║  ███╔╝ ",
@@ -12,9 +13,6 @@ const ASCII_NAME_LARGE = [
   "██║  ██║██║  ██║██║  ██║██║███████╗",
   "╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚══════╝",
 ];
-
-// Small ASCII art name for mobile
-const ASCII_NAME_SMALL = ["┏━┓┏━┓┳━┓┳┓┳━┓", "┣━┫┣━┫┣┳┛┃┃┏━┛", "┛ ┗┛ ┗┛┗━┛┗┗━━"];
 
 // Glitch characters for effect
 const GLITCH_CHARS = "!@#$%^&*()_+-=[]{}|;:,.<>?/\\~`█▓▒░▀▄╔╗╚╝║═";
@@ -58,7 +56,8 @@ export default function MagneticAsciiName({
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const asciiLines = isMobile ? ASCII_NAME_SMALL : ASCII_NAME_LARGE;
+  // Use same ASCII art for all screen sizes
+  const asciiLines = ASCII_NAME;
 
   // Glitch intensity settings
   const intensitySettings = {
@@ -238,14 +237,22 @@ export default function MagneticAsciiName({
       onMouseEnter={() => setIsHovered(true)}
       style={{
         perspective: "1000px",
+        overflowX: isMobile ? "auto" : "visible",
+        maxWidth: "100%",
+        WebkitOverflowScrolling: "touch",
       }}
     >
       {/* Main ASCII art */}
       <pre
         className="font-mono leading-tight text-center"
         style={{
-          fontSize: isMobile ? "0.7rem" : "clamp(0.7rem, 2.5vw, 1.4rem)",
-          letterSpacing: isMobile ? "0" : "0.08em",
+          fontSize: isMobile
+            ? "clamp(0.35rem, 2.5vw, 0.55rem)"
+            : "clamp(0.7rem, 2.5vw, 1.4rem)",
+          letterSpacing: isMobile ? "-0.03em" : "0.08em",
+          lineHeight: isMobile ? 1.05 : 1.2,
+          whiteSpace: "pre",
+          minWidth: isMobile ? "max-content" : "auto",
         }}
       >
         {asciiLines.map((line, rowIndex) => (
@@ -288,13 +295,17 @@ export default function MagneticAsciiName({
           <pre
             className="absolute inset-0 font-mono leading-tight text-center pointer-events-none"
             style={{
-              fontSize: isMobile ? "0.6rem" : "clamp(0.5rem, 1.5vw, 0.9rem)",
-              letterSpacing: isMobile ? "0" : "0.05em",
+              fontSize: isMobile
+                ? "clamp(0.35rem, 2.5vw, 0.55rem)"
+                : "clamp(0.5rem, 1.5vw, 0.9rem)",
+              letterSpacing: isMobile ? "-0.03em" : "0.05em",
+              lineHeight: isMobile ? 1.05 : 1.2,
               color: "#ff0000",
               opacity: 0.3,
               transform: `translate(${Math.random() * 4 - 2}px, ${Math.random() * 2 - 1}px)`,
               clipPath: `inset(${Math.random() * 30}% 0 ${Math.random() * 30}% 0)`,
               mixBlendMode: "screen",
+              whiteSpace: "pre",
             }}
             aria-hidden="true"
           >
@@ -309,13 +320,17 @@ export default function MagneticAsciiName({
           <pre
             className="absolute inset-0 font-mono leading-tight text-center pointer-events-none"
             style={{
-              fontSize: isMobile ? "0.6rem" : "clamp(0.5rem, 1.5vw, 0.9rem)",
-              letterSpacing: isMobile ? "0" : "0.05em",
+              fontSize: isMobile
+                ? "clamp(0.35rem, 2.5vw, 0.55rem)"
+                : "clamp(0.5rem, 1.5vw, 0.9rem)",
+              letterSpacing: isMobile ? "-0.03em" : "0.05em",
+              lineHeight: isMobile ? 1.05 : 1.2,
               color: "#00ffff",
               opacity: 0.3,
               transform: `translate(${Math.random() * -4 + 2}px, ${Math.random() * 2 - 1}px)`,
               clipPath: `inset(${Math.random() * 30}% 0 ${Math.random() * 30}% 0)`,
               mixBlendMode: "screen",
+              whiteSpace: "pre",
             }}
             aria-hidden="true"
           >
@@ -340,16 +355,18 @@ export default function MagneticAsciiName({
         </>
       )}
 
-      {/* Interaction hint */}
-      <div
-        className="absolute -bottom-6 left-1/2 -translate-x-1/2 font-mono text-xs transition-opacity duration-300"
-        style={{
-          color: "var(--code-comment)",
-          opacity: isHovered ? 0 : 0.5,
-        }}
-      >
-        hover to interact
-      </div>
+      {/* Interaction hint - hidden on mobile */}
+      {!isMobile && (
+        <div
+          className="absolute -bottom-6 left-1/2 -translate-x-1/2 font-mono text-xs transition-opacity duration-300"
+          style={{
+            color: "var(--code-comment)",
+            opacity: isHovered ? 0 : 0.5,
+          }}
+        >
+          hover to interact
+        </div>
+      )}
 
       {/* Inline keyframes */}
       <style jsx>{`

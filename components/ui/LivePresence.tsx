@@ -88,10 +88,10 @@ export default function LivePresence({
   const lastBroadcast = useRef(0);
   const cursorThrottle = 50; // ms between cursor updates
 
-  // Position classes
+  // Position classes - top positions moved down to avoid overlapping nav buttons
   const positionClasses = {
-    "top-right": "top-4 right-4",
-    "top-left": "top-4 left-4",
+    "top-right": "top-16 right-4",
+    "top-left": "top-16 left-4",
     "bottom-right": "bottom-4 right-4",
     "bottom-left": "bottom-4 left-4",
   };

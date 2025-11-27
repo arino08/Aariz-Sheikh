@@ -15,6 +15,7 @@ export default function Navigation({ compact = false }: NavigationProps) {
   const [activeSection, setActiveSection] = useState("hero");
   const [isScrolled, setIsScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const navRef = useRef<HTMLElement>(null);
   const indicatorRef = useRef<HTMLDivElement>(null);
   const navLinksRef = useRef<(HTMLButtonElement | null)[]>([]);
@@ -29,6 +30,17 @@ export default function Navigation({ compact = false }: NavigationProps) {
     ],
     [],
   );
+
+  // Check if mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Update active indicator position
   useEffect(() => {
@@ -171,6 +183,8 @@ export default function Navigation({ compact = false }: NavigationProps) {
         onClose={() => setIsMenuOpen(false)}
         onNavigate={handleNavigation}
       />
+
+      {/* Top Navigation Bar */}
       <nav
         ref={navRef}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
@@ -304,7 +318,7 @@ export default function Navigation({ compact = false }: NavigationProps) {
               </button>
             </div>
 
-            {/* Mobile: Resume + Terminal Button */}
+            {/* Mobile: Resume + Terminal Menu Button */}
             <div className="md:hidden flex items-center gap-2">
               <a
                 href="/resume.pdf"
@@ -370,28 +384,6 @@ export default function Navigation({ compact = false }: NavigationProps) {
             />
           </div>
         </div>
-
-        {/* Mobile bottom nav (optional - shows on small screens when scrolled) */}
-        {isScrolled && (
-          <div className="md:hidden fixed bottom-4 left-4 right-4 bg-[#161B22]/95 backdrop-blur-lg rounded-2xl border border-gray-800 p-2 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
-            <div className="flex items-center justify-around">
-              {sections.map((section) => (
-                <button
-                  key={section.id}
-                  onClick={() => handleScrollToSection(section.id)}
-                  className={`flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all duration-300 ${
-                    activeSection === section.id
-                      ? "text-[var(--terminal-green)] bg-[var(--terminal-green)]/10"
-                      : "text-[var(--code-comment)]"
-                  }`}
-                >
-                  <span className="text-lg">{section.icon}</span>
-                  <span className="text-[10px] font-mono">{section.label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
       </nav>
     </>
   );

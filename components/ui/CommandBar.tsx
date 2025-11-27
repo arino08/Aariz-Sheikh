@@ -43,6 +43,7 @@ interface HistoryEntry {
 
 export default function CommandBar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [input, setInput] = useState("");
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
@@ -58,6 +59,16 @@ export default function CommandBar() {
   const containerRef = useRef<HTMLDivElement>(null);
   const historyRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
+
+  // Check if mobile - hide button on mobile since sprite handles it
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Terminal sounds
   const { playKeypress, playSuccess, playError, playWhoosh, playBeep } =
@@ -713,8 +724,13 @@ export default function CommandBar() {
     }
   };
 
-  // Floating button when closed
+  // Floating button when closed - hidden on mobile (sprite handles it)
   if (!isOpen) {
+    // On mobile, return null - the sprite guide handles opening command palette
+    if (isMobile) {
+      return null;
+    }
+
     return (
       <button
         onClick={openCommandBar}

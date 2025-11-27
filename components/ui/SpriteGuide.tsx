@@ -134,13 +134,18 @@ interface SpriteGuideProps {
   enabled?: boolean;
   position?: "left" | "right";
   size?: number;
+  onOpenCommandPalette?: () => void;
 }
 
 export default function SpriteGuide({
   enabled = true,
   position = "right",
   size = 120,
+  onOpenCommandPalette,
 }: SpriteGuideProps) {
+  // Scroll progress state for pedestal
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [showPedestal, setShowPedestal] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [currentSection, setCurrentSection] = useState("hero");
@@ -157,6 +162,7 @@ export default function SpriteGuide({
   const [isSpawning, setIsSpawning] = useState(true);
   const [spawnProgress, setSpawnProgress] = useState(0);
   const [matrixChars, setMatrixChars] = useState<string[]>([]);
+  const [isSmugActive, setIsSmugActive] = useState(false);
   const lastSectionChange = useRef<number>(Date.now());
 
   const performanceSettings = usePerformanceSettings();
@@ -169,6 +175,29 @@ export default function SpriteGuide({
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Track scroll progress for pedestal
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+
+      setScrollProgress(Math.min(100, Math.max(0, scrollPercent)));
+      setShowPedestal(scrollTop > 100);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Scroll to top function
+  const scrollToTop = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   // Cursor blink
@@ -415,6 +444,45 @@ export default function SpriteGuide({
     }
   }, [currentSection, playAnimation]);
 
+  // Handle sprite click - play smug animation then open command palette
+  const handleSpriteClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+
+      // If already in smug mode or spawning, ignore
+      if (isSmugActive || isSpawning) return;
+
+      // Set smug animation
+      setIsSmugActive(true);
+      setCurrentAnimation("smug");
+      setCurrentFrame(0);
+      setIsPlayingAnimation(true);
+
+      // After smug animation, open command palette
+      setTimeout(() => {
+        setIsSmugActive(false);
+        setIsPlayingAnimation(false);
+        setCurrentAnimation("idle");
+
+        // Open command palette via Ctrl+Space event or callback
+        if (onOpenCommandPalette) {
+          onOpenCommandPalette();
+        } else {
+          // Dispatch keyboard event to trigger command bar
+          const event = new KeyboardEvent("keydown", {
+            key: " ",
+            code: "Space",
+            ctrlKey: true,
+            metaKey: false,
+            bubbles: true,
+          });
+          window.dispatchEvent(event);
+        }
+      }, 800); // Show smug for 800ms
+    },
+    [isSmugActive, isSpawning, onOpenCommandPalette],
+  );
+
   if (!enabled || !isVisible) return null;
 
   // Get current sprite
@@ -422,6 +490,9 @@ export default function SpriteGuide({
   const currentSprite = currentSprites[currentFrame % currentSprites.length];
 
   const spriteSize = isMobile ? size * 0.7 : size;
+  const pedestalWidth = spriteSize * 1.2;
+  const pedestalHeight = 24;
+  const progressStrokeWidth = 3;
 
   // Render matrix spawn effect
   const renderMatrixSpawn = () => {
@@ -456,80 +527,90 @@ export default function SpriteGuide({
       ref={containerRef}
       className={`fixed z-40 transition-all duration-300 ${
         position === "right" ? "right-4" : "left-4"
-      } ${isMobile ? "bottom-20" : "bottom-24"}`}
+      } bottom-4`}
       style={{ opacity: 0 }}
     >
-      {/* Main container */}
-      <div
-        className={`relative ${isMinimized ? "cursor-pointer" : ""}`}
-        onClick={isMinimized ? toggleMinimize : undefined}
-      >
-        {/* Speech bubble - only show when not minimized */}
-        {!isMinimized && (
-          <div
-            className={`absolute ${
-              position === "right" ? "right-full mr-3" : "left-full ml-3"
-            } bottom-1/2 translate-y-1/2`}
-          >
-            <div
-              className="relative bg-[#0D1117]/95 backdrop-blur-md border border-[var(--terminal-green)]/30 rounded-lg p-3 min-w-[180px] max-w-[220px] md:max-w-[260px]"
-              style={{
-                boxShadow: glowEnabled
-                  ? "0 0 10px rgba(0,255,136,0.1), inset 0 0 10px rgba(0,255,136,0.02)"
-                  : "0 4px 20px rgba(0,0,0,0.3)",
-              }}
-            >
-              {/* Message */}
-              <p className="font-mono text-xs md:text-sm text-[var(--terminal-green)]">
-                {currentMessage}
-                {isTyping && (
-                  <span
-                    className="inline-block w-[2px] h-[1em] ml-0.5 align-middle"
-                    style={{
-                      backgroundColor: "var(--terminal-green)",
-                      opacity: cursorVisible ? 1 : 0,
-                      boxShadow: glowEnabled
-                        ? "0 0 3px var(--terminal-green)"
-                        : "none",
-                    }}
-                  />
-                )}
-              </p>
+      {/* Section indicator - shows current section above everything */}
+      <div className="absolute -top-8 left-1/2 -translate-x-1/2 font-mono text-[10px] text-[var(--terminal-green)]/60 whitespace-nowrap bg-[#0D1117]/80 px-2 py-0.5 rounded border border-[var(--terminal-green)]/20">
+        ⟨ {currentSection.toUpperCase()} ⟩
+      </div>
 
-              {/* Next message button */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  nextMessage();
-                }}
-                className="absolute -bottom-2 right-2 font-mono text-[10px] text-[var(--terminal-green)]/60 hover:text-[var(--terminal-green)] transition-colors"
-              >
-                [next →]
-              </button>
-
-              {/* Speech bubble tail */}
-              <div
-                className={`absolute top-1/2 -translate-y-1/2 w-3 h-3 rotate-45 bg-[#0D1117] border-[var(--terminal-green)]/30 ${
-                  position === "right"
-                    ? "right-[-7px] border-r border-t"
-                    : "left-[-7px] border-l border-b"
-                }`}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Sprite container */}
+      {/* Speech bubble - positioned to the side */}
+      {currentMessage && (
         <div
-          className={`relative overflow-hidden cursor-pointer transition-all duration-500 ${
-            isMinimized ? "opacity-60 hover:opacity-100" : ""
+          className={`absolute ${
+            position === "right" ? "right-full mr-3" : "left-full ml-3"
+          } bottom-16`}
+        >
+          <div
+            className="relative bg-[#0D1117]/95 backdrop-blur-md border border-[var(--terminal-green)]/30 rounded-lg p-3 min-w-[160px] max-w-[200px]"
+            style={{
+              boxShadow: glowEnabled
+                ? "0 0 10px rgba(0,255,136,0.1), inset 0 0 10px rgba(0,255,136,0.02)"
+                : "0 4px 20px rgba(0,0,0,0.3)",
+            }}
+          >
+            {/* Message */}
+            <p className="font-mono text-xs text-[var(--terminal-green)]">
+              {currentMessage}
+              {isTyping && (
+                <span
+                  className="inline-block w-[2px] h-[1em] ml-0.5 align-middle"
+                  style={{
+                    backgroundColor: "var(--terminal-green)",
+                    opacity: cursorVisible ? 1 : 0,
+                    boxShadow: glowEnabled
+                      ? "0 0 3px var(--terminal-green)"
+                      : "none",
+                  }}
+                />
+              )}
+            </p>
+
+            {/* Next message arrow */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                nextMessage();
+              }}
+              className="absolute top-1/2 -translate-y-1/2 -right-6 text-[var(--terminal-green)]/40 hover:text-[var(--terminal-green)] transition-colors text-sm"
+              title="Next message"
+            >
+              ›
+            </button>
+
+            {/* Speech bubble tail */}
+            <div
+              className={`absolute top-1/2 -translate-y-1/2 w-3 h-3 rotate-45 bg-[#0D1117] border-[var(--terminal-green)]/30 ${
+                position === "right"
+                  ? "right-[-7px] border-r border-t"
+                  : "left-[-7px] border-l border-b"
+              }`}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Main wrapper - positions sprite on pedestal */}
+      <div className="flex flex-col items-center">
+        {/* Sprite container - click to open command palette */}
+        <div
+          className={`relative cursor-pointer transition-all duration-300 ${
+            isSmugActive ? "scale-110" : "hover:scale-105"
           }`}
-          onClick={!isMinimized ? toggleMinimize : undefined}
+          onClick={handleSpriteClick}
+          title={
+            isMobile ? "Tap to open commands" : "Click to open command palette"
+          }
           style={{
-            width: isMinimized ? spriteSize * 0.5 : spriteSize,
-            height: isMinimized ? spriteSize * 0.5 : spriteSize,
+            width: spriteSize,
+            height: spriteSize,
+            marginBottom: showPedestal ? -16 : 0, // Overlap so feet touch pedestal
+            zIndex: 10,
             filter: glowEnabled
-              ? "drop-shadow(0 0 8px rgba(0,255,136,0.15))"
+              ? isSmugActive
+                ? "drop-shadow(0 0 15px rgba(0,255,136,0.4))"
+                : "drop-shadow(0 0 8px rgba(0,255,136,0.15))"
               : "drop-shadow(0 4px 8px rgba(0,0,0,0.3))",
           }}
         >
@@ -550,31 +631,149 @@ export default function SpriteGuide({
             priority
           />
 
-          {/* Minimize/maximize indicator */}
-          <div
-            className="absolute bottom-1 right-1 font-mono text-[8px] text-[var(--terminal-green)]/60 bg-[#0D1117]/80 px-1 rounded"
-            style={{
-              textShadow: glowEnabled ? "0 0 3px rgba(0,255,136,0.3)" : "none",
-            }}
-          >
-            {isMinimized ? "[+]" : "[−]"}
-          </div>
+          {/* Smug indicator when active */}
+          {isSmugActive && (
+            <div
+              className="absolute top-1 right-1 font-mono text-sm"
+              style={{
+                textShadow: "0 0 8px rgba(0,255,136,0.8)",
+              }}
+            >
+              😏
+            </div>
+          )}
         </div>
 
-        {/* Section indicator */}
-        {!isMinimized && (
-          <div className="absolute -top-6 left-1/2 -translate-x-1/2 font-mono text-[10px] text-[var(--terminal-green)]/60 whitespace-nowrap bg-[#0D1117]/80 px-2 py-0.5 rounded">
-            ⟨ {currentSection.toUpperCase()} ⟩
+        {/* Pedestal / Scroll-to-top button - sprite stands on this */}
+        {showPedestal && (
+          <button
+            onClick={scrollToTop}
+            className="relative cursor-pointer group transition-all duration-300 hover:scale-105 active:scale-95"
+            aria-label="Scroll to top"
+            title={`${Math.round(scrollProgress)}% - Click to scroll to top`}
+            style={{ zIndex: 5 }}
+          >
+            {/* Pedestal SVG */}
+            <svg
+              width={pedestalWidth}
+              height={pedestalHeight + 8}
+              viewBox={`0 0 ${pedestalWidth} ${pedestalHeight + 8}`}
+              className="overflow-visible"
+            >
+              {/* Pedestal base shape - trapezoid */}
+              <defs>
+                <linearGradient
+                  id="pedestalGradient"
+                  x1="0%"
+                  y1="0%"
+                  x2="0%"
+                  y2="100%"
+                >
+                  <stop offset="0%" stopColor="#1a1f26" />
+                  <stop offset="50%" stopColor="#0d1117" />
+                  <stop offset="100%" stopColor="#060809" />
+                </linearGradient>
+                <filter id="pedestalGlow">
+                  <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+                  <feMerge>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              {/* Background track */}
+              <rect
+                x={4}
+                y={4}
+                width={pedestalWidth - 8}
+                height={pedestalHeight}
+                rx={4}
+                fill="url(#pedestalGradient)"
+                stroke="rgba(107, 114, 128, 0.3)"
+                strokeWidth={1}
+              />
+
+              {/* Progress fill */}
+              <rect
+                x={4}
+                y={4}
+                width={(pedestalWidth - 8) * (scrollProgress / 100)}
+                height={pedestalHeight}
+                rx={4}
+                fill="var(--terminal-green)"
+                opacity={0.2}
+                className="transition-all duration-150"
+              />
+
+              {/* Top edge highlight */}
+              <line
+                x1={6}
+                y1={5}
+                x2={pedestalWidth - 6}
+                y2={5}
+                stroke="var(--terminal-green)"
+                strokeWidth={2}
+                strokeLinecap="round"
+                opacity={0.6}
+                filter="url(#pedestalGlow)"
+              />
+
+              {/* Progress bar on top */}
+              <line
+                x1={6}
+                y1={5}
+                x2={6 + (pedestalWidth - 12) * (scrollProgress / 100)}
+                y2={5}
+                stroke="var(--terminal-green)"
+                strokeWidth={2}
+                strokeLinecap="round"
+                className="transition-all duration-150"
+                filter="url(#pedestalGlow)"
+              />
+
+              {/* Corner accents */}
+              <path
+                d={`M 2 8 L 2 4 L 6 4`}
+                fill="none"
+                stroke="var(--terminal-green)"
+                strokeWidth={1.5}
+                opacity={0.8}
+              />
+              <path
+                d={`M ${pedestalWidth - 2} 8 L ${pedestalWidth - 2} 4 L ${pedestalWidth - 6} 4`}
+                fill="none"
+                stroke="var(--terminal-green)"
+                strokeWidth={1.5}
+                opacity={0.8}
+              />
+            </svg>
+
+            {/* Up arrow / percentage indicator */}
+            <div
+              className="absolute inset-0 flex items-center justify-center font-mono text-[10px] transition-all duration-300"
+              style={{
+                color: "var(--terminal-green)",
+                textShadow: glowEnabled
+                  ? "0 0 8px var(--terminal-green)"
+                  : "none",
+              }}
+            >
+              <span className="group-hover:hidden">
+                {Math.round(scrollProgress)}%
+              </span>
+              <span className="hidden group-hover:inline">↑ TOP</span>
+            </div>
+          </button>
+        )}
+
+        {/* Hint text when no pedestal */}
+        {!showPedestal && (
+          <div className="font-mono text-[9px] text-gray-600 whitespace-nowrap text-center mt-2">
+            {isMobile ? "Tap me!" : "Click or Ctrl+Space"}
           </div>
         )}
       </div>
-
-      {/* Keyboard shortcut hint */}
-      {!isMinimized && !isMobile && (
-        <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 font-mono text-[9px] text-gray-600 whitespace-nowrap">
-          Press G to toggle guide
-        </div>
-      )}
     </div>
   );
 }

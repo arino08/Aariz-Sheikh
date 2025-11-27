@@ -64,11 +64,22 @@ export default function TerminalHeading({
 }: TerminalHeadingProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(!animateOnScroll);
+  const [isMobile, setIsMobile] = useState(false);
   const [, setDisplayState] = useState({
     typing: "",
     showContent: false,
     currentLine: 0,
   });
+
+  // Check if mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Scroll trigger
   useEffect(() => {
@@ -85,12 +96,30 @@ export default function TerminalHeading({
           }
         });
       },
-      { threshold: 0.3 },
+      {
+        threshold: 0.1, // Lower threshold for mobile compatibility
+        rootMargin: "50px 0px", // Trigger earlier for smoother experience
+      },
     );
 
     observer.observe(containerRef.current);
     return () => observer.disconnect();
   }, [animateOnScroll, delay]);
+
+  // Fallback: Force show content after timeout on mobile if animation hasn't triggered
+  useEffect(() => {
+    if (isMobile && !isVisible && animateOnScroll) {
+      const fallbackTimer = setTimeout(() => {
+        setIsVisible(true);
+        setDisplayState({
+          typing: children,
+          showContent: true,
+          currentLine: 10,
+        });
+      }, 1500); // 1.5 second fallback for mobile
+      return () => clearTimeout(fallbackTimer);
+    }
+  }, [isMobile, isVisible, animateOnScroll, children]);
 
   // Typing animation for various variants
   useEffect(() => {
@@ -790,7 +819,7 @@ export default function TerminalHeading({
   return (
     <div
       ref={containerRef}
-      className={`terminal-heading ${className}`}
+      className={`terminal-heading overflow-x-auto max-w-full ${className}`}
       style={{
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? "translateY(0)" : "translateY(20px)",

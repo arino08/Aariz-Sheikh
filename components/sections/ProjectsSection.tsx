@@ -11,6 +11,22 @@ import AsciiArtHeading from "../ui/AsciiArtHeading";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Hook to check if mobile
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  return isMobile;
+}
+
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -60,9 +76,10 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   return (
     <div
       ref={cardRef}
-      className="flex-shrink-0 w-[85vw] sm:w-[70vw] md:w-[60vw] lg:w-[50vw] xl:w-[45vw] mx-4 transform-gpu"
+      className="flex-shrink-0 w-[85vw] sm:w-[70vw] md:w-[60vw] lg:w-[50vw] xl:w-[45vw] md:mx-4 transform-gpu"
       style={{
         animationDelay: `${index * 0.1}s`,
+        scrollSnapAlign: "center",
       }}
     >
       <div className="h-full bg-[#161B22] border border-gray-800 hover:border-[var(--terminal-green)]/30 rounded-xl overflow-hidden shadow-2xl transition-all duration-500 hover:shadow-[0_0_40px_rgba(0,255,136,0.1)]">
@@ -192,6 +209,7 @@ export default function ProjectsSection() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     loadProjects();
@@ -224,6 +242,13 @@ export default function ProjectsSection() {
 
     if (!section || !scrollContainer || projects.length === 0) return;
 
+    // On mobile, don't use scroll-triggered animation - use native horizontal scroll
+    if (isMobile) {
+      // Reset any existing transforms
+      gsap.set(scrollContainer, { x: 0 });
+      return;
+    }
+
     // Clear existing ScrollTriggers for this section
     ScrollTrigger.getAll().forEach((trigger) => {
       if (trigger.vars.trigger === section) {
@@ -231,7 +256,7 @@ export default function ProjectsSection() {
       }
     });
 
-    // Small delay to ensure DOM is ready
+    // Small delay to ensure DOM is ready (Desktop only)
     const timer = setTimeout(() => {
       const containerWidth = scrollContainer.scrollWidth;
       const viewportWidth = window.innerWidth;
@@ -257,7 +282,7 @@ export default function ProjectsSection() {
     return () => {
       clearTimeout(timer);
     };
-  }, [projects]);
+  }, [projects, isMobile]);
 
   return (
     <section
@@ -348,14 +373,29 @@ export default function ProjectsSection() {
           <div className="w-20 h-1 bg-gradient-to-r from-transparent via-[var(--terminal-green)]/50 to-transparent rounded-full" />
           <span className="font-mono text-xs">▶</span>
         </div>
+        {isMobile && (
+          <p className="font-mono text-xs text-[var(--terminal-green)]/50 mt-2">
+            Swipe to browse projects →
+          </p>
+        )}
       </div>
 
       {/* Horizontal Scroll Container */}
-      <div className="relative z-10 flex items-center overflow-hidden pb-12">
+      <div
+        className={`relative z-10 pb-12 ${
+          isMobile
+            ? "overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-thumb-[var(--terminal-green)]/50 scrollbar-track-transparent"
+            : "flex items-center overflow-hidden"
+        }`}
+        style={{
+          WebkitOverflowScrolling: "touch",
+          scrollSnapType: isMobile ? "x mandatory" : "none",
+        }}
+      >
         <div
           ref={scrollContainerRef}
-          className="flex items-stretch pl-[5vw]"
-          style={{ paddingRight: "30vw" }}
+          className={`flex items-stretch ${isMobile ? "px-4 gap-4" : "pl-[5vw]"}`}
+          style={{ paddingRight: isMobile ? "1rem" : "30vw" }}
         >
           {isLoading ? (
             <div className="w-screen flex items-center justify-center min-h-[400px]">

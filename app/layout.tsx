@@ -4,7 +4,6 @@ import "./globals.css";
 import GlobalTerminalShortcut from "@/components/ui/GlobalTerminalShortcut";
 import ClientWrapper from "@/components/ui/ClientWrapper";
 import ScrollProgress from "@/components/ui/ScrollProgress";
-import { CircularProgress } from "@/components/ui/ScrollProgress";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 import EasterEggs from "@/components/ui/EasterEggs";
 import { PerformanceProvider } from "@/components/ui/PerformanceProvider";
@@ -75,15 +74,6 @@ export default function RootLayout({
             height={2}
             color="var(--terminal-green)"
             glowEffect={true}
-          />
-
-          {/* Circular scroll-to-top button */}
-          <CircularProgress
-            size={50}
-            strokeWidth={3}
-            color="var(--terminal-green)"
-            showPercentage={false}
-            position="bottom-right"
           />
 
           {/* Easter eggs - Konami code, secret words */}

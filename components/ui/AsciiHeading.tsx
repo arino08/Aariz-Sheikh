@@ -103,16 +103,27 @@ export default function AsciiHeading({
   const [displayText, setDisplayText] = useState(text);
   const [isAnimating, setIsAnimating] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if mobile device for simpler animations
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
   const [isHovered, setIsHovered] = useState(false);
   const [cursorVisible, setCursorVisible] = useState(true);
   const animationRef = useRef<gsap.core.Tween | null>(null);
 
-  // Size classes
+  // Size classes - optimized for mobile
   const sizeClasses = {
-    sm: "text-lg md:text-xl",
-    md: "text-2xl md:text-3xl lg:text-4xl",
-    lg: "text-3xl md:text-4xl lg:text-5xl",
-    xl: "text-4xl md:text-5xl lg:text-6xl",
+    sm: "text-base sm:text-lg md:text-xl",
+    md: "text-xl sm:text-2xl md:text-3xl lg:text-4xl",
+    lg: "text-2xl sm:text-3xl md:text-4xl lg:text-5xl",
+    xl: "text-3xl sm:text-4xl md:text-5xl lg:text-6xl",
   };
 
   // Convert text to ASCII art format
@@ -207,7 +218,7 @@ export default function AsciiHeading({
           setHasAnimated(true);
           onAnimationComplete?.();
         },
-      }
+      },
     );
   }, [text, isAnimating, onAnimationComplete]);
 
@@ -300,7 +311,7 @@ export default function AsciiHeading({
           setHasAnimated(true);
           onAnimationComplete?.();
         },
-      }
+      },
     );
   }, [text, isAnimating, onAnimationComplete]);
 
@@ -323,7 +334,7 @@ export default function AsciiHeading({
               Math.floor(Math.random() * SCRAMBLE_CHARS.length)
             ];
           })
-          .join("")
+          .join(""),
       );
 
       iterations++;
@@ -394,9 +405,7 @@ export default function AsciiHeading({
     let completedCount = 0;
 
     // Reveal in random order
-    const order = chars
-      .map((_, i) => i)
-      .sort(() => Math.random() - 0.5);
+    const order = chars.map((_, i) => i).sort(() => Math.random() - 0.5);
 
     const interval = setInterval(() => {
       if (completedCount < chars.length) {
@@ -404,9 +413,7 @@ export default function AsciiHeading({
         completedCount++;
 
         setDisplayText(
-          chars
-            .map((char, i) => (revealed[i] ? char : "█"))
-            .join("")
+          chars.map((char, i) => (revealed[i] ? char : "█")).join(""),
         );
       } else {
         clearInterval(interval);
@@ -471,7 +478,10 @@ export default function AsciiHeading({
           }
         });
       },
-      { threshold: 0.3 }
+      {
+        threshold: 0.1, // Lower threshold for mobile compatibility
+        rootMargin: "50px 0px", // Trigger earlier for smoother experience
+      },
     );
 
     observer.observe(containerRef.current);
@@ -487,6 +497,20 @@ export default function AsciiHeading({
       }, delay * 1000);
     }
   }, [triggerOnScroll, hasAnimated, delay, startAnimation]);
+
+  // Fallback: Force show content after timeout on mobile if animation hasn't triggered
+  useEffect(() => {
+    if (isMobile && !hasAnimated) {
+      const fallbackTimer = setTimeout(() => {
+        if (!hasAnimated) {
+          setDisplayText(text);
+          setHasAnimated(true);
+          setIsAnimating(false);
+        }
+      }, 2000); // 2 second fallback
+      return () => clearTimeout(fallbackTimer);
+    }
+  }, [isMobile, hasAnimated, text]);
 
   // Hover scramble effect
   const handleHoverScramble = useCallback(() => {
@@ -510,7 +534,7 @@ export default function AsciiHeading({
             }
             return char;
           })
-          .join("")
+          .join(""),
       );
 
       iterations++;
@@ -528,20 +552,22 @@ export default function AsciiHeading({
     const lines = getAsciiArt(displayText);
     return (
       <pre
-        className="font-mono leading-tight select-none"
+        className="font-mono leading-tight select-none overflow-x-auto max-w-full"
         style={{
           fontSize:
             size === "sm"
-              ? "0.5rem"
+              ? "clamp(0.35rem, 1.5vw, 0.5rem)"
               : size === "lg"
-              ? "1rem"
-              : size === "xl"
-              ? "1.25rem"
-              : "0.75rem",
+                ? "clamp(0.5rem, 2vw, 1rem)"
+                : size === "xl"
+                  ? "clamp(0.6rem, 2.5vw, 1.25rem)"
+                  : "clamp(0.4rem, 1.8vw, 0.75rem)",
         }}
       >
         {lines.map((line, i) => (
-          <div key={i}>{line}</div>
+          <div key={i} className="whitespace-pre">
+            {line}
+          </div>
         ))}
       </pre>
     );
@@ -610,11 +636,12 @@ export default function AsciiHeading({
           <span
             className="ml-1"
             style={{
-              opacity: suffix.includes("_") || suffix.includes("█")
-                ? cursorVisible
-                  ? 1
-                  : 0
-                : 1,
+              opacity:
+                suffix.includes("_") || suffix.includes("█")
+                  ? cursorVisible
+                    ? 1
+                    : 0
+                  : 1,
             }}
           >
             {suffix}
