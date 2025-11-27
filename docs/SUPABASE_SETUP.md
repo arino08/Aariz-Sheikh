@@ -199,6 +199,95 @@ You can verify your setup by:
 2. You should see the `projects` table
 3. Click on it to see the sample data
 
+## Step 8: Create Project Docs Table
+
+Run this SQL to enable documentation for projects:
+
+```sql
+-- Project Documentation table
+CREATE TABLE project_docs (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  project_id UUID REFERENCES projects(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  content TEXT NOT NULL,
+  order_index INTEGER DEFAULT 0,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create index for faster lookups
+CREATE INDEX idx_project_docs_project_id ON project_docs(project_id);
+CREATE INDEX idx_project_docs_order ON project_docs(order_index);
+
+-- Trigger for updated_at
+CREATE TRIGGER update_project_docs_updated_at BEFORE UPDATE ON project_docs
+FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Enable RLS
+ALTER TABLE project_docs ENABLE ROW LEVEL SECURITY;
+
+-- Policies for project_docs
+CREATE POLICY "Enable read access for project_docs"
+ON project_docs FOR SELECT USING (true);
+
+CREATE POLICY "Enable insert for project_docs"
+ON project_docs FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Enable update for project_docs"
+ON project_docs FOR UPDATE USING (true);
+
+CREATE POLICY "Enable delete for project_docs"
+ON project_docs FOR DELETE USING (true);
+```
+
+## Step 9: Create Visitor Counter
+
+Run this SQL to enable the visitor counter:
+
+```sql
+-- Visitor count table (single row)
+CREATE TABLE visitor_count (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  count INTEGER DEFAULT 0,
+  last_visited TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Insert initial row
+INSERT INTO visitor_count (count) VALUES (0);
+
+-- Enable RLS
+ALTER TABLE visitor_count ENABLE ROW LEVEL SECURITY;
+
+-- Policy for reading
+CREATE POLICY "Enable read for visitor_count"
+ON visitor_count FOR SELECT USING (true);
+
+-- Policy for updating
+CREATE POLICY "Enable update for visitor_count"
+ON visitor_count FOR UPDATE USING (true);
+
+-- Create function to increment visitor count
+CREATE OR REPLACE FUNCTION increment_visitor_count()
+RETURNS INTEGER AS $$
+DECLARE
+  new_count INTEGER;
+BEGIN
+  UPDATE visitor_count
+  SET count = count + 1,
+      last_visited = NOW()
+  WHERE id = (SELECT id FROM visitor_count LIMIT 1)
+  RETURNING count INTO new_count;
+  
+  RETURN new_count;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Grant execute permission
+GRANT EXECUTE ON FUNCTION increment_visitor_count() TO anon;
+GRANT EXECUTE ON FUNCTION increment_visitor_count() TO authenticated;
+```
+
 ## Next Steps
 
 Once you complete these steps:
@@ -207,6 +296,8 @@ Once you complete these steps:
 3. ✅ Set up storage bucket
 4. ✅ Add environment variables
 5. ✅ Install Supabase client
+6. ✅ Create project_docs table
+7. ✅ Create visitor_count table and function
 
 The implementation will automatically connect and start working!
 

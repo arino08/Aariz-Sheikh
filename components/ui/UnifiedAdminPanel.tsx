@@ -3,14 +3,20 @@
 import { useState, useEffect } from "react";
 import ProjectAdminPanel from "./ProjectAdminPanel";
 import BlogAdminContent from "../blog/BlogAdminContent";
+import DocsAdminContent from "./DocsAdminContent";
 
 interface UnifiedAdminPanelProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export default function UnifiedAdminPanel({ isOpen, onClose }: UnifiedAdminPanelProps) {
-  const [activeTab, setActiveTab] = useState<'projects' | 'blog'>('projects');
+export default function UnifiedAdminPanel({
+  isOpen,
+  onClose,
+}: UnifiedAdminPanelProps) {
+  const [activeTab, setActiveTab] = useState<"projects" | "blog" | "docs">(
+    "projects",
+  );
 
   // Prevent background scroll when modal is open
   useEffect(() => {
@@ -22,11 +28,11 @@ export default function UnifiedAdminPanel({ isOpen, onClose }: UnifiedAdminPanel
       const originalTop = document.body.style.top;
       const originalWidth = document.body.style.width;
 
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
       document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
-      document.documentElement.style.overflow = 'hidden';
+      document.body.style.width = "100%";
+      document.documentElement.style.overflow = "hidden";
 
       return () => {
         // Restore original styles and scroll position
@@ -34,7 +40,7 @@ export default function UnifiedAdminPanel({ isOpen, onClose }: UnifiedAdminPanel
         document.body.style.position = originalPosition;
         document.body.style.top = originalTop;
         document.body.style.width = originalWidth;
-        document.documentElement.style.overflow = '';
+        document.documentElement.style.overflow = "";
         window.scrollTo(0, scrollY);
       };
     }
@@ -71,8 +77,18 @@ export default function UnifiedAdminPanel({ isOpen, onClose }: UnifiedAdminPanel
                 onClick={onClose}
                 className="text-gray-400 hover:text-[#00ff88] transition-colors p-1 active:scale-95 flex-shrink-0"
               >
-                <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-5 h-5 md:w-6 md:h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
@@ -80,28 +96,41 @@ export default function UnifiedAdminPanel({ isOpen, onClose }: UnifiedAdminPanel
             {/* Tabs */}
             <div className="flex border-t border-gray-700">
               <button
-                onClick={() => setActiveTab('projects')}
+                onClick={() => setActiveTab("projects")}
                 className={`flex-1 px-4 py-3 font-mono text-sm md:text-base transition-colors relative ${
-                  activeTab === 'projects'
-                    ? 'text-[#00ff88] bg-[#0D1117]'
-                    : 'text-gray-400 hover:text-gray-300'
+                  activeTab === "projects"
+                    ? "text-[#00ff88] bg-[#0D1117]"
+                    : "text-gray-400 hover:text-gray-300"
                 }`}
               >
                 Projects
-                {activeTab === 'projects' && (
+                {activeTab === "projects" && (
                   <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00ff88]" />
                 )}
               </button>
               <button
-                onClick={() => setActiveTab('blog')}
+                onClick={() => setActiveTab("blog")}
                 className={`flex-1 px-4 py-3 font-mono text-sm md:text-base transition-colors relative ${
-                  activeTab === 'blog'
-                    ? 'text-[#00ff88] bg-[#0D1117]'
-                    : 'text-gray-400 hover:text-gray-300'
+                  activeTab === "blog"
+                    ? "text-[#00ff88] bg-[#0D1117]"
+                    : "text-gray-400 hover:text-gray-300"
                 }`}
               >
                 Blog Posts
-                {activeTab === 'blog' && (
+                {activeTab === "blog" && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00ff88]" />
+                )}
+              </button>
+              <button
+                onClick={() => setActiveTab("docs")}
+                className={`flex-1 px-4 py-3 font-mono text-sm md:text-base transition-colors relative ${
+                  activeTab === "docs"
+                    ? "text-[#00ff88] bg-[#0D1117]"
+                    : "text-gray-400 hover:text-gray-300"
+                }`}
+              >
+                Docs
+                {activeTab === "docs" && (
                   <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00ff88]" />
                 )}
               </button>
@@ -110,8 +139,9 @@ export default function UnifiedAdminPanel({ isOpen, onClose }: UnifiedAdminPanel
 
           {/* Content */}
           <div className="flex-1 overflow-hidden overscroll-contain scrollbar-terminal">
-            {activeTab === 'projects' && <ProjectAdminPanel />}
-            {activeTab === 'blog' && <BlogAdminContent />}
+            {activeTab === "projects" && <ProjectAdminPanel />}
+            {activeTab === "blog" && <BlogAdminContent />}
+            {activeTab === "docs" && <DocsAdminContent />}
           </div>
         </div>
       </div>
