@@ -44,16 +44,33 @@ function SettingToggle({
       <button
         onClick={onChange}
         disabled={disabled}
-        className={`relative w-12 h-6 rounded-full transition-colors duration-200 ${
-          enabled ? "bg-[var(--terminal-green)]" : "bg-gray-700"
-        } ${disabled ? "cursor-not-allowed" : "cursor-pointer"}`}
+        className={`flex-shrink-0 rounded-full ${disabled ? "cursor-not-allowed" : "cursor-pointer"}`}
+        style={{
+          position: "relative",
+          display: "inline-block",
+          width: 28,
+          height: 14,
+          minHeight: 14,
+          maxHeight: 14,
+          minWidth: 28,
+          backgroundColor: enabled ? "#00ff88" : "#374151",
+          borderRadius: 9999,
+        }}
         aria-checked={enabled}
         role="switch"
       >
         <span
-          className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform duration-200 ${
-            enabled ? "translate-x-6" : "translate-x-0"
-          }`}
+          style={{
+            position: "absolute",
+            display: "block",
+            width: 10,
+            height: 10,
+            top: 2,
+            left: enabled ? 16 : 2,
+            backgroundColor: "#fff",
+            borderRadius: 9999,
+            transition: "left 0.2s ease",
+          }}
         />
       </button>
     </div>
