@@ -8,6 +8,7 @@ import Image from "next/image";
 import { ParallaxBackground, FloatingElement } from "../ui/ParallaxSection";
 import TextReveal from "../ui/TextReveal";
 import AsciiArtHeading from "../ui/AsciiArtHeading";
+import { LightningIcon, RocketIcon, FolderIcon } from "../ui/TerminalIcons";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -120,7 +121,9 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                   unoptimized={project.image_url.includes("supabase.co")}
                 />
               ) : (
-                <div className="text-white text-6xl">🚀</div>
+                <div className="text-white">
+                  <RocketIcon size={64} color="var(--terminal-green)" />
+                </div>
               )}
               {/* Gradient Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-[#161B22] via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:via-transparent lg:to-[#161B22]"></div>
@@ -143,7 +146,8 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               {/* Tech Stack */}
               <div>
                 <h4 className="font-mono text-xs text-[var(--terminal-green)] mb-2 flex items-center gap-2">
-                  <span>⚡</span> Tech Stack
+                  <LightningIcon size={14} color="var(--terminal-green)" /> Tech
+                  Stack
                 </h4>
                 <div className="flex flex-wrap gap-2">
                   {project.tech_stack.slice(0, 5).map((tech, techIndex) => (
@@ -172,7 +176,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                   rel="noopener noreferrer"
                   className="flex-1 min-w-[80px] font-mono text-xs bg-[var(--terminal-green)] text-[#0D1117] px-3 py-2 rounded-lg hover:shadow-[0_0_20px_rgba(0,255,136,0.3)] transition-all duration-300 text-center font-semibold flex items-center justify-center gap-1"
                 >
-                  <span>🚀</span>
+                  <RocketIcon size={14} color="#0D1117" />
                   <span>Demo</span>
                 </a>
               )}
@@ -182,9 +186,9 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                   href={project.github_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 min-w-[80px] font-mono text-xs border border-[var(--terminal-blue)] text-[var(--terminal-blue)] px-3 py-2 rounded-lg hover:bg-[var(--terminal-blue)] hover:text-[#0D1117] transition-all duration-300 text-center font-semibold flex items-center justify-center gap-1"
+                  className="flex-1 min-w-[80px] font-mono text-xs border border-[var(--terminal-blue)] text-[var(--terminal-blue)] px-3 py-2 rounded-lg hover:bg-[var(--terminal-blue)] hover:text-[#0D1117] transition-all duration-300 text-center font-semibold flex items-center justify-center gap-1 group"
                 >
-                  <span>📂</span>
+                  <FolderIcon size={14} color="currentColor" />
                   <span>Code</span>
                 </a>
               )}

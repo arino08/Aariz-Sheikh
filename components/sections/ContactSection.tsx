@@ -18,6 +18,8 @@ import {
   LinkedInIcon,
   TwitterIcon,
   RocketIcon,
+  CoffeeIcon,
+  TargetIcon,
 } from "../ui/TerminalIcons";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -392,14 +394,20 @@ export default function ContactSection() {
         <div className="relative border-t border-gray-800 pt-8">
           {/* Tap hint tooltip */}
           {showHint && (
-            <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-[var(--terminal-green)] text-[#0D1117] px-4 py-2 rounded-lg font-mono text-xs whitespace-nowrap animate-bounce shadow-[0_0_20px_var(--terminal-green)]">
-              One more tap! 🎯
+            <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-[var(--terminal-green)] text-[#0D1117] px-4 py-2 rounded-lg font-mono text-xs whitespace-nowrap animate-bounce shadow-[0_0_20px_var(--terminal-green)] flex items-center gap-1">
+              One more tap!
+              <TargetIcon size={14} color="#0D1117" />
             </div>
           )}
 
           <div className="font-mono text-xs text-[var(--code-comment)] text-center space-y-2">
-            <div className="text-[var(--terminal-purple)]">
-              {"// Built with Next.js, Three.js, GSAP & lots of ☕"}
+            <div className="text-[var(--terminal-purple)] flex items-center justify-center gap-1">
+              {"// Built with Next.js, Three.js, GSAP & lots of"}
+              <CoffeeIcon
+                size={14}
+                color="var(--terminal-purple)"
+                className="inline-block"
+              />
             </div>
             <div
               className="cursor-pointer select-none hover:text-[var(--terminal-green)] transition-colors duration-300"

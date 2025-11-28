@@ -205,19 +205,33 @@ function SkillCard({ skill }: { skill: Skill }) {
           </svg>
         );
       case "rust":
+        // Rust gear/cog logo - clean minimal style
         return (
           <svg className={iconClass} viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="9" />
-            <path d="M12 3v2" />
-            <path d="M12 19v2" />
-            <path d="M3 12h2" />
-            <path d="M19 12h2" />
-            <path d="M5.6 5.6l1.4 1.4" />
-            <path d="M17 17l1.4 1.4" />
-            <path d="M5.6 18.4l1.4-1.4" />
-            <path d="M17 7l1.4-1.4" />
-            <path d="M8 12h3l2 3" />
-            <path d="M13 9h2v6" />
+            {/* Main gear circle */}
+            <circle cx="12" cy="12" r="7" />
+            {/* Gear teeth - 5 pointed extensions */}
+            <path d="M12 2v3" />
+            <path d="M12 19v3" />
+            <path d="M2 12h3" />
+            <path d="M19 12h3" />
+            <path d="M4.93 4.93l2.12 2.12" />
+            <path d="M16.95 16.95l2.12 2.12" />
+            <path d="M4.93 19.07l2.12-2.12" />
+            <path d="M16.95 7.05l2.12-2.12" />
+            {/* Inner details - small circles at gear points */}
+            <circle cx="12" cy="5" r="0.75" fill="currentColor" />
+            <circle cx="12" cy="19" r="0.75" fill="currentColor" />
+            <circle cx="5" cy="12" r="0.75" fill="currentColor" />
+            <circle cx="19" cy="12" r="0.75" fill="currentColor" />
+            {/* Center R letter */}
+            <path d="M10 8.5v7" strokeLinecap="round" />
+            <path
+              d="M10 8.5h2.5a2 2 0 0 1 0 4H10"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path d="M12 12.5l2.5 3" strokeLinecap="round" />
           </svg>
         );
       case "nodejs":

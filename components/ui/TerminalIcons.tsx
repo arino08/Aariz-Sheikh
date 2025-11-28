@@ -114,18 +114,8 @@ export const LinkedInIcon = ({
       strokeWidth="1.5"
       fill="none"
     />
-    <path
-      d="M7 10V17"
-      stroke={color}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-    <path
-      d="M7 7V7.01"
-      stroke={color}
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
+    <path d="M7 10V17" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+    <path d="M7 7V7.01" stroke={color} strokeWidth="2" strokeLinecap="round" />
     <path
       d="M11 17V13C11 11.895 11.895 11 13 11C14.105 11 15 11.895 15 13V17"
       stroke={color}
@@ -294,8 +284,22 @@ export const RustIcon = ({
       fill="none"
     />
     {/* Eyes */}
-    <circle cx="9" cy="12" r="1.5" stroke={color} strokeWidth="1.5" fill="none" />
-    <circle cx="15" cy="12" r="1.5" stroke={color} strokeWidth="1.5" fill="none" />
+    <circle
+      cx="9"
+      cy="12"
+      r="1.5"
+      stroke={color}
+      strokeWidth="1.5"
+      fill="none"
+    />
+    <circle
+      cx="15"
+      cy="12"
+      r="1.5"
+      stroke={color}
+      strokeWidth="1.5"
+      fill="none"
+    />
     {/* Left claw */}
     <path
       d="M5 14C3 13 2 11 2 9C2 8 3 7 4 8L5 10"
@@ -315,10 +319,30 @@ export const RustIcon = ({
       fill="none"
     />
     {/* Legs */}
-    <path d="M7 17L5 20" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
-    <path d="M10 18L9 21" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
-    <path d="M14 18L15 21" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
-    <path d="M17 17L19 20" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+    <path
+      d="M7 17L5 20"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M10 18L9 21"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M14 18L15 21"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M17 17L19 20"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
   </svg>
 );
 
@@ -397,12 +421,7 @@ export const ChatIcon = ({
       strokeLinejoin="round"
       fill="none"
     />
-    <path
-      d="M8 10H8.01"
-      stroke={color}
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
+    <path d="M8 10H8.01" stroke={color} strokeWidth="2" strokeLinecap="round" />
     <path
       d="M12 10H12.01"
       stroke={color}
@@ -452,12 +471,7 @@ export const StrengthIcon = ({
       strokeLinejoin="round"
       fill="none"
     />
-    <path
-      d="M4 8V16"
-      stroke={color}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
+    <path d="M4 8V16" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
     <path
       d="M20 8C20 8 19 4 16 4C13 4 13 8 13 8"
       stroke={color}
@@ -474,12 +488,7 @@ export const StrengthIcon = ({
       strokeLinejoin="round"
       fill="none"
     />
-    <path
-      d="M20 8V16"
-      stroke={color}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
+    <path d="M20 8V16" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
     <path
       d="M11 12H13"
       stroke={color}
@@ -532,18 +541,8 @@ export const WaveIcon = ({
       fill="none"
     />
     {/* Motion lines */}
-    <path
-      d="M2 7L3 8"
-      stroke={color}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-    <path
-      d="M2 11H3"
-      stroke={color}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
+    <path d="M2 7L3 8" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+    <path d="M2 11H3" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
     <path
       d="M2 15L3 14"
       stroke={color}
@@ -630,12 +629,7 @@ export const ArrowRightIcon = ({
       filter: glow ? `drop-shadow(0 0 4px ${color})` : undefined,
     }}
   >
-    <path
-      d="M5 12H19"
-      stroke={color}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
+    <path d="M5 12H19" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
     <path
       d="M13 6L19 12L13 18"
       stroke={color}
@@ -717,14 +711,575 @@ export const TerminalIcon = ({
       fill="none"
     />
     <path
-      d="M6 9L10 12L6 15"
+      d="M6 8L10 12L6 16"
       stroke={color}
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
-      d="M12 15H18"
+      d="M12 16H18"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+// Coffee icon - for caffeine references
+export const CoffeeIcon = ({
+  size = 24,
+  color = "currentColor",
+  className = "",
+  glow = false,
+}: IconProps) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    style={{
+      filter: glow ? `drop-shadow(0 0 4px ${color})` : undefined,
+    }}
+  >
+    <path
+      d="M17 8H18C19.1046 8 20 8.89543 20 10V11C20 12.1046 19.1046 13 18 13H17"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M3 8H17V15C17 17.2091 15.2091 19 13 19H7C4.79086 19 3 17.2091 3 15V8Z"
+      stroke={color}
+      strokeWidth="1.5"
+    />
+    <path d="M7 3V5" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+    <path d="M10 3V5" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+    <path d="M13 3V5" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+  </svg>
+);
+
+// React/Atom icon
+export const ReactIcon = ({
+  size = 24,
+  color = "currentColor",
+  className = "",
+  glow = false,
+}: IconProps) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    style={{
+      filter: glow ? `drop-shadow(0 0 4px ${color})` : undefined,
+    }}
+  >
+    <circle cx="12" cy="12" r="2" stroke={color} strokeWidth="1.5" />
+    <ellipse cx="12" cy="12" rx="10" ry="4" stroke={color} strokeWidth="1.5" />
+    <ellipse
+      cx="12"
+      cy="12"
+      rx="10"
+      ry="4"
+      stroke={color}
+      strokeWidth="1.5"
+      transform="rotate(60 12 12)"
+    />
+    <ellipse
+      cx="12"
+      cy="12"
+      rx="10"
+      ry="4"
+      stroke={color}
+      strokeWidth="1.5"
+      transform="rotate(120 12 12)"
+    />
+  </svg>
+);
+
+// TypeScript icon
+export const TypeScriptIcon = ({
+  size = 24,
+  color = "currentColor",
+  className = "",
+  glow = false,
+}: IconProps) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    style={{
+      filter: glow ? `drop-shadow(0 0 4px ${color})` : undefined,
+    }}
+  >
+    <rect
+      x="2"
+      y="2"
+      width="20"
+      height="20"
+      rx="2"
+      stroke={color}
+      strokeWidth="1.5"
+    />
+    <path
+      d="M7 10H13M10 10V17"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M14.5 10H17.5C18.0523 10 18.5 10.4477 18.5 11V11.5C18.5 12.0523 18.0523 12.5 17.5 12.5H15.5C14.9477 12.5 14.5 12.9477 14.5 13.5V16C14.5 16.5523 14.9477 17 15.5 17H18.5"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+// Tailwind CSS icon (wind)
+export const TailwindIcon = ({
+  size = 24,
+  color = "currentColor",
+  className = "",
+  glow = false,
+}: IconProps) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    style={{
+      filter: glow ? `drop-shadow(0 0 4px ${color})` : undefined,
+    }}
+  >
+    <path
+      d="M6.5 8C7.5 5 9.5 4 12 4C16 4 16.5 7 18.5 7.5C19.5 7.75 20.5 7.5 21.5 6.5"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M2.5 17.5C3.5 16.5 4.5 16.25 5.5 16.5C7.5 17 8 20 12 20C14.5 20 16.5 19 17.5 16"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M4 12.5C5.33333 11.5 7 11 9 11.5C12 12.25 12.5 15 16 15C18 15 19.5 14.5 21 13"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+// Three.js / 3D Globe icon
+export const ThreeJsIcon = ({
+  size = 24,
+  color = "currentColor",
+  className = "",
+  glow = false,
+}: IconProps) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    style={{
+      filter: glow ? `drop-shadow(0 0 4px ${color})` : undefined,
+    }}
+  >
+    <circle cx="12" cy="12" r="9" stroke={color} strokeWidth="1.5" />
+    <ellipse cx="12" cy="12" rx="4" ry="9" stroke={color} strokeWidth="1.5" />
+    <path d="M3 12H21" stroke={color} strokeWidth="1.5" />
+    <path
+      d="M4.5 7H19.5"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M4.5 17H19.5"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+// Sparkle/GSAP animation icon
+export const SparkleIcon = ({
+  size = 24,
+  color = "currentColor",
+  className = "",
+  glow = false,
+}: IconProps) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    style={{
+      filter: glow ? `drop-shadow(0 0 4px ${color})` : undefined,
+    }}
+  >
+    <path
+      d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M18 14L19 17L22 18L19 19L18 22L17 19L14 18L17 17L18 14Z"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M5 16L5.5 18L7.5 18.5L5.5 19L5 21L4.5 19L2.5 18.5L4.5 18L5 16Z"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+// PostgreSQL elephant icon
+export const PostgresIcon = ({
+  size = 24,
+  color = "currentColor",
+  className = "",
+  glow = false,
+}: IconProps) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    style={{
+      filter: glow ? `drop-shadow(0 0 4px ${color})` : undefined,
+    }}
+  >
+    <path
+      d="M17 4C19 5 20 7.5 20 10C20 13 18.5 15 17 16L18 20C18 21 17 22 16 22C15 22 14.5 21.5 14.5 21L14 18"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M7 4C5 5 4 7.5 4 10C4 14 6 17 10 18L9 21C9 21.5 9.5 22 10 22C11 22 11.5 21.5 11.5 21L12 18"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <ellipse cx="12" cy="10" rx="6" ry="7" stroke={color} strokeWidth="1.5" />
+    <circle cx="9" cy="9" r="1" fill={color} />
+    <circle cx="15" cy="9" r="1" fill={color} />
+    <path
+      d="M10 13C10.5 13.5 11.5 13.5 12 13"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+// Stack Overflow icon
+export const StackOverflowIcon = ({
+  size = 24,
+  color = "currentColor",
+  className = "",
+  glow = false,
+}: IconProps) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    style={{
+      filter: glow ? `drop-shadow(0 0 4px ${color})` : undefined,
+    }}
+  >
+    <path
+      d="M4 21V13H7V18H17V13H20V21H4Z"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinejoin="round"
+    />
+    <path d="M8 15H16" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+    <path
+      d="M8.5 11.5L15.5 13"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M10 8L16 11"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M12 5L17 9"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M15 3L18.5 7"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+// Folder icon for projects
+export const FolderIcon = ({
+  size = 24,
+  color = "currentColor",
+  className = "",
+  glow = false,
+}: IconProps) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    style={{
+      filter: glow ? `drop-shadow(0 0 4px ${color})` : undefined,
+    }}
+  >
+    <path
+      d="M3 6C3 4.89543 3.89543 4 5 4H9L11 6H19C20.1046 6 21 6.89543 21 8V18C21 19.1046 20.1046 20 19 20H5C3.89543 20 3 19.1046 3 18V6Z"
+      stroke={color}
+      strokeWidth="1.5"
+    />
+    <path d="M3 10H21" stroke={color} strokeWidth="1.5" />
+  </svg>
+);
+
+// Lightning bolt for tech/energy
+export const LightningIcon = ({
+  size = 24,
+  color = "currentColor",
+  className = "",
+  glow = false,
+}: IconProps) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    style={{
+      filter: glow ? `drop-shadow(0 0 4px ${color})` : undefined,
+    }}
+  >
+    <path
+      d="M13 2L4 14H11L10 22L20 10H13L14 2H13Z"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+// Graduation cap for education
+export const GraduationIcon = ({
+  size = 24,
+  color = "currentColor",
+  className = "",
+  glow = false,
+}: IconProps) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    style={{
+      filter: glow ? `drop-shadow(0 0 4px ${color})` : undefined,
+    }}
+  >
+    <path
+      d="M12 4L2 9L12 14L22 9L12 4Z"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M6 11.5V17C6 17 8 20 12 20C16 20 18 17 18 17V11.5"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path d="M22 9V15" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+  </svg>
+);
+
+// Next.js icon (N in a box)
+export const NextJsIcon = ({
+  size = 24,
+  color = "currentColor",
+  className = "",
+  glow = false,
+}: IconProps) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    style={{
+      filter: glow ? `drop-shadow(0 0 4px ${color})` : undefined,
+    }}
+  >
+    <circle cx="12" cy="12" r="10" stroke={color} strokeWidth="1.5" />
+    <path
+      d="M8 16V8L16 18"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path d="M16 8V13" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+  </svg>
+);
+
+// Target icon for goals/hints
+export const TargetIcon = ({
+  size = 24,
+  color = "currentColor",
+  className = "",
+  glow = false,
+}: IconProps) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    style={{
+      filter: glow ? `drop-shadow(0 0 4px ${color})` : undefined,
+    }}
+  >
+    <circle cx="12" cy="12" r="9" stroke={color} strokeWidth="1.5" />
+    <circle cx="12" cy="12" r="5" stroke={color} strokeWidth="1.5" />
+    <circle cx="12" cy="12" r="1.5" fill={color} />
+    <path d="M12 2V5" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+    <path
+      d="M12 19V22"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path d="M2 12H5" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+    <path
+      d="M19 12H22"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+// Crab icon for Rust
+export const CrabIcon = ({
+  size = 24,
+  color = "currentColor",
+  className = "",
+  glow = false,
+}: IconProps) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    style={{
+      filter: glow ? `drop-shadow(0 0 4px ${color})` : undefined,
+    }}
+  >
+    <ellipse cx="12" cy="14" rx="7" ry="5" stroke={color} strokeWidth="1.5" />
+    <circle cx="9" cy="13" r="1" fill={color} />
+    <circle cx="15" cy="13" r="1" fill={color} />
+    <path
+      d="M5 12C3 11 2 9 2 7"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M19 12C21 11 22 9 22 7"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M5 14L3 17"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M19 14L21 17"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M7 17L6 20"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M17 17L18 20"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M10 17L10 20"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M14 17L14 20"
       stroke={color}
       strokeWidth="1.5"
       strokeLinecap="round"
@@ -749,6 +1304,20 @@ export const TerminalIcons = {
   arrowRight: ArrowRightIcon,
   externalLink: ExternalLinkIcon,
   terminal: TerminalIcon,
+  coffee: CoffeeIcon,
+  react: ReactIcon,
+  typescript: TypeScriptIcon,
+  tailwind: TailwindIcon,
+  threejs: ThreeJsIcon,
+  sparkle: SparkleIcon,
+  postgres: PostgresIcon,
+  stackoverflow: StackOverflowIcon,
+  folder: FolderIcon,
+  lightning: LightningIcon,
+  graduation: GraduationIcon,
+  nextjs: NextJsIcon,
+  crab: CrabIcon,
+  target: TargetIcon,
 };
 
 export default TerminalIcons;

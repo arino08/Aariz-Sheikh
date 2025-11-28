@@ -1,6 +1,18 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import {
+  CoffeeIcon,
+  NextJsIcon,
+  ReactIcon,
+  TypeScriptIcon,
+  CrabIcon,
+  TailwindIcon,
+  ThreeJsIcon,
+  SparkleIcon,
+  PostgresIcon,
+  StackOverflowIcon,
+} from "./TerminalIcons";
 
 interface BootSequenceProps {
   onComplete: () => void;
@@ -8,7 +20,17 @@ interface BootSequenceProps {
 
 interface BootLine {
   text: string;
-  type: "bios" | "info" | "ok" | "loading" | "success" | "ascii" | "blank";
+  type:
+    | "bios"
+    | "info"
+    | "ok"
+    | "loading"
+    | "success"
+    | "ascii"
+    | "blank"
+    | "warn"
+    | "error"
+    | "comment";
   delay: number;
 }
 
@@ -22,6 +44,8 @@ export default function BootSequence({ onComplete }: BootSequenceProps) {
   const [progressWidth, setProgressWidth] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
   const [showSkipHint, setShowSkipHint] = useState(false);
+  const [coffeeCount, setCoffeeCount] = useState(0);
+  const [showCoffeeCount, setShowCoffeeCount] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const hasStartedRef = useRef(false);
 
@@ -72,120 +96,270 @@ export default function BootSequence({ onComplete }: BootSequenceProps) {
           }
           return prev + increment;
         });
-      }, 30);
+      }, 20);
       return () => clearInterval(interval);
     }
   }, [showMemoryTest]);
 
+  // Coffee counter animation
+  useEffect(() => {
+    if (showCoffeeCount) {
+      const interval = setInterval(() => {
+        setCoffeeCount((prev) => {
+          if (prev >= 9999) {
+            clearInterval(interval);
+            setShowCoffeeCount(false);
+            return 9999;
+          }
+          return prev + Math.floor(Math.random() * 150) + 100;
+        });
+      }, 15);
+      return () => clearInterval(interval);
+    }
+  }, [showCoffeeCount]);
+
   // Boot lines configuration
   const bootLinesRef = useRef<BootLine[]>([
-    { text: "", type: "blank", delay: 200 },
-    {
-      text: "╔══════════════════════════════════════════════════════════════════╗",
-      type: "ascii",
-      delay: 50,
-    },
-    {
-      text: "║     AARIZ-BIOS (C) 2024 Sheikh Technologies, Inc.                ║",
-      type: "ascii",
-      delay: 50,
-    },
-    {
-      text: "║     PORTFOLIO SYSTEM BIOS - Version 2.0.24                       ║",
-      type: "ascii",
-      delay: 50,
-    },
-    {
-      text: "╚══════════════════════════════════════════════════════════════════╝",
-      type: "ascii",
-      delay: 50,
-    },
     { text: "", type: "blank", delay: 100 },
     {
-      text: "AARIZ-BIOS Date: 01/15/2024   Time: 00:00:00",
+      text: "+--------------------------------------------------------------+",
+      type: "ascii",
+      delay: 25,
+    },
+    {
+      text: "|     AARIZ BIOS  -  Advanced Awesome Runtime Interface Zone   |",
+      type: "ascii",
+      delay: 25,
+    },
+    {
+      text: "+--------------------------------------------------------------+",
+      type: "ascii",
+      delay: 25,
+    },
+    {
+      text: "",
+      type: "blank",
+      delay: 30,
+    },
+    {
+      text: '     (C) 2025 Sheikh Technologies - "It works on my machine"',
       type: "bios",
-      delay: 80,
+      delay: 50,
+    },
+    {
+      text: "",
+      type: "blank",
+      delay: 30,
     },
     { text: "", type: "blank", delay: 50 },
     {
-      text: "CPU: Developer Brain @ 3.6GHz (Turbo: ∞)",
+      text: "AARIZ-BIOS v3.14.159 - Built with {{COFFEE}} and existential dread",
+      type: "bios",
+      delay: 60,
+    },
+    { text: "", type: "blank", delay: 30 },
+    {
+      text: "// TODO: Actually finish this portfolio someday",
+      type: "comment",
+      delay: 60,
+    },
+    { text: "", type: "blank", delay: 30 },
+    {
+      text: "CPU: Developer Brain™ @ Variable GHz (depends on coffee intake)",
+      type: "info",
+      delay: 45,
+    },
+    {
+      text: "      Cores: 2 (1 for coding, 1 for existential crisis)",
+      type: "info",
+      delay: 40,
+    },
+    { text: "MEMORY_TEST", type: "loading", delay: 250 },
+    {
+      text: "RAM: 32768MB OK (98% used by Chrome tabs)",
+      type: "ok",
+      delay: 60,
+    },
+    { text: "", type: "blank", delay: 30 },
+    { text: "Detecting Storage Devices...", type: "info", delay: 80 },
+    {
+      text: "  ├── /dev/projects    : 10+ repositories [MOUNTED]",
+      type: "ok",
+      delay: 45,
+    },
+    {
+      text: "  ├── /dev/node_modules: ∞ GB (why is it so big?!) [MOUNTED]",
+      type: "warn",
+      delay: 50,
+    },
+    {
+      text: "  └── /dev/sleep       : 0 bytes (404 Not Found)",
+      type: "error",
+      delay: 50,
+    },
+    { text: "", type: "blank", delay: 30 },
+    {
+      text: "Loading Developer Stack...",
       type: "info",
       delay: 60,
     },
-    { text: "MEMORY_TEST", type: "loading", delay: 400 },
-    { text: "Memory Test Passed: 32768MB OK", type: "ok", delay: 100 },
-    { text: "", type: "blank", delay: 50 },
-    { text: "Detecting IDE Drives...", type: "info", delay: 150 },
-    { text: "  Primary Master  : Next.js 15.4.4 [SSD]", type: "ok", delay: 80 },
-    { text: "  Primary Slave   : React 19.1.0 [SSD]", type: "ok", delay: 80 },
-    { text: "  Secondary Master: TypeScript 5.x [SSD]", type: "ok", delay: 80 },
     {
-      text: "  Secondary Slave : Tailwind CSS 4.x [SSD]",
+      text: "  ├── Next.js 15 .......................... [LOADED] {{NEXTJS}}",
       type: "ok",
-      delay: 80,
+      delay: 35,
     },
-    { text: "", type: "blank", delay: 50 },
     {
-      text: "Initializing Hardware Abstraction Layer...",
+      text: "  ├── React 19 ............................ [LOADED] {{REACT}}",
+      type: "ok",
+      delay: 35,
+    },
+    {
+      text: "  ├── TypeScript 5.x ...................... [LOADED] {{TYPESCRIPT}}",
+      type: "ok",
+      delay: 35,
+    },
+    {
+      text: "  ├── Rust (because I like pain) .......... [LOADED] {{RUST}}",
+      type: "ok",
+      delay: 40,
+    },
+    {
+      text: "  ├── Tailwind CSS ........................ [LOADED] {{TAILWIND}}",
+      type: "ok",
+      delay: 35,
+    },
+    {
+      text: "  ├── Three.js ............................ [LOADED] {{THREEJS}}",
+      type: "ok",
+      delay: 35,
+    },
+    {
+      text: "  ├── GSAP ................................ [LOADED] {{SPARKLE}}",
+      type: "ok",
+      delay: 35,
+    },
+    {
+      text: "  ├── PostgreSQL .......................... [LOADED] {{POSTGRES}}",
+      type: "ok",
+      delay: 35,
+    },
+    {
+      text: "  └── Stack Overflow ...................... [ESSENTIAL] {{STACKOVERFLOW}}",
+      type: "ok",
+      delay: 40,
+    },
+    { text: "", type: "blank", delay: 30 },
+    { text: "Initializing Developer Environment...", type: "info", delay: 50 },
+    {
+      text: "  ├── Coffee Machine ...................... [CONNECTED]",
+      type: "ok",
+      delay: 35,
+    },
+    {
+      text: "  ├── Dark Theme .......................... [ALWAYS]",
+      type: "ok",
+      delay: 35,
+    },
+    {
+      text: "  ├── Impostor Syndrome ................... [ACTIVE]",
+      type: "warn",
+      delay: 40,
+    },
+    {
+      text: "  ├── Ability to Google ................... [EXPERT]",
+      type: "ok",
+      delay: 35,
+    },
+    {
+      text: "  └── Work-Life Balance ................... [SEGFAULT]",
+      type: "error",
+      delay: 45,
+    },
+    { text: "", type: "blank", delay: 30 },
+    {
+      text: "Running System Diagnostics...",
       type: "info",
-      delay: 100,
+      delay: 50,
     },
     {
-      text: "  ├── three.js@0.178.0 ...................... [LOADED]",
+      text: "  ├── Debugging Skills .................... [RUBBER DUCK REQUIRED]",
+      type: "warn",
+      delay: 45,
+    },
+    {
+      text: '  ├── Git Commit Messages ................. ["fixed stuff" x99]',
+      type: "warn",
+      delay: 45,
+    },
+    {
+      text: "  └── Code Quality ........................ [COMPILES = SHIPS]",
       type: "ok",
-      delay: 60,
+      delay: 45,
     },
+    { text: "", type: "blank", delay: 30 },
     {
-      text: "  ├── @react-three/fiber@9.2.0 .............. [LOADED]",
-      type: "ok",
-      delay: 60,
-    },
-    {
-      text: "  ├── gsap@3.13.0 ........................... [LOADED]",
-      type: "ok",
-      delay: 60,
-    },
-    {
-      text: "  ├── @supabase/supabase-js@2.76.0 .......... [LOADED]",
-      type: "ok",
-      delay: 60,
-    },
-    {
-      text: "  └── framer-motion (optional) .............. [SKIPPED]",
+      text: "Loading User Profile: aariz@dev",
       type: "info",
       delay: 60,
     },
-    { text: "", type: "blank", delay: 50 },
-    { text: "PCI Device Enumeration:", type: "info", delay: 80 },
     {
-      text: "  GPU: WebGL 2.0 - NVIDIA GeForce RTX Mental",
+      text: "  ├── Title: Full-Stack Developer",
       type: "ok",
+      delay: 35,
+    },
+    {
+      text: "  ├── Status: 3rd Year IT Student",
+      type: "ok",
+      delay: 35,
+    },
+    {
+      text: "  ├── Passion: Building cool stuff",
+      type: "ok",
+      delay: 35,
+    },
+    {
+      text: "  └── Mission: Turn caffeine → code",
+      type: "ok",
+      delay: 40,
+    },
+    { text: "", type: "blank", delay: 30 },
+    { text: "COFFEE_COUNT", type: "loading", delay: 180 },
+    {
+      text: "  {{COFFEE}} Lifetime coffees consumed: ∞ (counter overflow)",
+      type: "warn",
       delay: 60,
     },
-    { text: "  Audio: Web Audio API [Enabled]", type: "ok", delay: 60 },
-    { text: "  Network: Ethernet [Connected]", type: "ok", delay: 60 },
-    { text: "", type: "blank", delay: 50 },
-    { text: "Loading portfolio.sys...", type: "loading", delay: 200 },
-    { text: "PROGRESS_BAR", type: "loading", delay: 800 },
-    { text: "", type: "blank", delay: 50 },
-    { text: "All systems operational.", type: "success", delay: 100 },
-    { text: "", type: "blank", delay: 50 },
+    { text: "", type: "blank", delay: 30 },
+    { text: "Compiling portfolio.rs...", type: "loading", delay: 80 },
+    { text: "PROGRESS_BAR", type: "loading", delay: 500 },
+    { text: "", type: "blank", delay: 30 },
     {
-      text: "╔══════════════════════════════════════════════════════════════════╗",
+      text: "   Finished `release` profile [optimized] target(s)",
+      type: "success",
+      delay: 50,
+    },
+    { text: "", type: "blank", delay: 30 },
+    {
+      text: "================================================================",
       type: "ascii",
-      delay: 30,
+      delay: 25,
     },
     {
-      text: "║  System Ready. Press any key to continue...                      ║",
-      type: "ascii",
-      delay: 30,
+      text: "  [OK] All systems nominal. Welcome to the terminal.",
+      type: "success",
+      delay: 40,
     },
     {
-      text: "╚══════════════════════════════════════════════════════════════════╝",
-      type: "ascii",
-      delay: 30,
+      text: "  Press any key to continue... (or don't, I'm not your mom)",
+      type: "info",
+      delay: 40,
     },
-    { text: "COMPLETE", type: "success", delay: 500 },
+    {
+      text: "================================================================",
+      type: "ascii",
+      delay: 25,
+    },
+    { text: "COMPLETE", type: "success", delay: 300 },
   ]);
 
   // Main boot sequence logic
@@ -213,7 +387,7 @@ export default function BootSequence({ onComplete }: BootSequenceProps) {
         setShowMemoryTest(true);
         setDisplayedLines((prev) => [
           ...prev,
-          { text: `Memory Test: ${currentMemoryCount}MB`, type: "loading" },
+          { text: `RAM Test: ${currentMemoryCount}KB`, type: "loading" },
         ]);
 
         // Animate memory count
@@ -224,13 +398,33 @@ export default function BootSequence({ onComplete }: BootSequenceProps) {
             clearInterval(memInterval);
             setShowMemoryTest(false);
           }
-        }, 30);
+        }, 20);
 
         setTimeout(() => {
           lineIdx++;
           charIdx = 0;
           processLine();
-        }, line.delay + 500);
+        }, line.delay + 300);
+        return;
+      }
+
+      if (line.text === "COFFEE_COUNT") {
+        setShowCoffeeCount(true);
+        setCoffeeCount(0);
+        setDisplayedLines((prev) => [
+          ...prev,
+          {
+            text: `  {{COFFEE}} Counting coffees consumed: ${coffeeCount}`,
+            type: "loading",
+          },
+        ]);
+
+        setTimeout(() => {
+          setShowCoffeeCount(false);
+          lineIdx++;
+          charIdx = 0;
+          processLine();
+        }, line.delay + 200);
         return;
       }
 
@@ -243,7 +437,7 @@ export default function BootSequence({ onComplete }: BootSequenceProps) {
         // Animate progress bar
         let progress = 0;
         const progressInterval = setInterval(() => {
-          progress += 2;
+          progress += 3;
           setProgressWidth(progress);
           if (progress >= 100) {
             clearInterval(progressInterval);
@@ -251,9 +445,9 @@ export default function BootSequence({ onComplete }: BootSequenceProps) {
               lineIdx++;
               charIdx = 0;
               processLine();
-            }, 200);
+            }, 120);
           }
-        }, 15);
+        }, 12);
         return;
       }
 
@@ -289,7 +483,7 @@ export default function BootSequence({ onComplete }: BootSequenceProps) {
         });
 
         charIdx++;
-        const charDelay = line.type === "ascii" ? 2 : 8 + Math.random() * 12;
+        const charDelay = line.type === "ascii" ? 2 : 4 + Math.random() * 6;
         setTimeout(processLine, charDelay);
       } else {
         // Line complete, finalize it
@@ -311,7 +505,7 @@ export default function BootSequence({ onComplete }: BootSequenceProps) {
     };
 
     // Start the boot sequence
-    setTimeout(processLine, 500);
+    setTimeout(processLine, 300);
   }, [isComplete, onComplete]);
 
   // Auto-scroll to bottom
@@ -319,7 +513,7 @@ export default function BootSequence({ onComplete }: BootSequenceProps) {
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
-  }, [displayedLines]);
+  }, [displayedLines, memoryCount, coffeeCount]);
 
   const getLineColor = (type: string) => {
     switch (type) {
@@ -337,14 +531,124 @@ export default function BootSequence({ onComplete }: BootSequenceProps) {
         return "text-[var(--terminal-purple)]";
       case "typing":
         return "text-gray-300";
+      case "warn":
+        return "text-[var(--terminal-orange)]";
+      case "error":
+        return "text-red-500";
+      case "comment":
+        return "text-gray-600 italic";
       default:
         return "text-gray-300";
     }
   };
 
+  // Icon mapping for replacing placeholders
+  const iconMap: Record<string, React.ReactNode> = {
+    "{{COFFEE}}": (
+      <CoffeeIcon
+        size={14}
+        color="var(--terminal-orange)"
+        className="inline-block align-middle mx-0.5"
+      />
+    ),
+    "{{NEXTJS}}": (
+      <NextJsIcon
+        size={14}
+        color="var(--terminal-green)"
+        className="inline-block align-middle mx-0.5"
+      />
+    ),
+    "{{REACT}}": (
+      <ReactIcon
+        size={14}
+        color="#61DAFB"
+        className="inline-block align-middle mx-0.5"
+      />
+    ),
+    "{{TYPESCRIPT}}": (
+      <TypeScriptIcon
+        size={14}
+        color="#3178C6"
+        className="inline-block align-middle mx-0.5"
+      />
+    ),
+    "{{RUST}}": (
+      <CrabIcon
+        size={14}
+        color="#DEA584"
+        className="inline-block align-middle mx-0.5"
+      />
+    ),
+    "{{TAILWIND}}": (
+      <TailwindIcon
+        size={14}
+        color="#38BDF8"
+        className="inline-block align-middle mx-0.5"
+      />
+    ),
+    "{{THREEJS}}": (
+      <ThreeJsIcon
+        size={14}
+        color="var(--terminal-blue)"
+        className="inline-block align-middle mx-0.5"
+      />
+    ),
+    "{{SPARKLE}}": (
+      <SparkleIcon
+        size={14}
+        color="#88CE02"
+        className="inline-block align-middle mx-0.5"
+      />
+    ),
+    "{{POSTGRES}}": (
+      <PostgresIcon
+        size={14}
+        color="#336791"
+        className="inline-block align-middle mx-0.5"
+      />
+    ),
+    "{{STACKOVERFLOW}}": (
+      <StackOverflowIcon
+        size={14}
+        color="#F48024"
+        className="inline-block align-middle mx-0.5"
+      />
+    ),
+  };
+
+  // Render text with icon replacements
+  const renderTextWithIcons = (text: string) => {
+    const parts: React.ReactNode[] = [];
+    let lastIndex = 0;
+    const regex = /\{\{[A-Z]+\}\}/g;
+    let match;
+
+    while ((match = regex.exec(text)) !== null) {
+      // Add text before the match
+      if (match.index > lastIndex) {
+        parts.push(text.slice(lastIndex, match.index));
+      }
+      // Add the icon
+      const icon = iconMap[match[0]];
+      if (icon) {
+        parts.push(<span key={match.index}>{icon}</span>);
+      } else {
+        parts.push(match[0]);
+      }
+      lastIndex = regex.lastIndex;
+    }
+
+    // Add remaining text
+    if (lastIndex < text.length) {
+      parts.push(text.slice(lastIndex));
+    }
+
+    return parts.length > 0 ? parts : text;
+  };
+
   return (
     <div
-      className={`fixed inset-0 bg-black z-[99999] overflow-hidden transition-opacity duration-500 ${
+      className={`fixed inset-0 bg-[#0a0a0a] z-[99999] overflow-hidden transition-opacity duration-500 ${
         isComplete ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
       onClick={handleSkip}
@@ -379,18 +683,27 @@ export default function BootSequence({ onComplete }: BootSequenceProps) {
         className="absolute left-0 right-0 h-[2px] pointer-events-none z-10 animate-scanline"
         style={{
           background:
-            "linear-gradient(90deg, transparent, rgba(0,255,136,0.1), transparent)",
+            "linear-gradient(90deg, transparent, rgba(0,255,136,0.15), transparent)",
+        }}
+      />
+
+      {/* Ambient glow */}
+      <div
+        className="absolute inset-0 pointer-events-none z-5"
+        style={{
+          background:
+            "radial-gradient(ellipse at center top, rgba(0,255,136,0.03) 0%, transparent 50%)",
         }}
       />
 
       {/* Terminal content */}
       <div
         ref={containerRef}
-        className="relative z-20 h-full overflow-y-auto p-6 md:p-10 font-mono text-xs md:text-sm"
+        className="relative z-20 h-full overflow-y-auto p-4 md:p-8 font-mono text-[10px] md:text-xs lg:text-sm"
         style={{ textShadow: "0 0 5px currentColor" }}
       >
         {/* Boot lines */}
-        <div className="space-y-0.5 max-w-4xl">
+        <div className="space-y-0.5 max-w-4xl mx-auto">
           {displayedLines.map((line, index) => {
             // Handle progress bar
             if (line.text === "PROGRESS" && line.type === "loading") {
@@ -398,11 +711,11 @@ export default function BootSequence({ onComplete }: BootSequenceProps) {
                 <div key={index} className="py-1">
                   <div className="flex items-center gap-4">
                     <span className="text-[var(--terminal-orange)]">
-                      Loading:
+                      Compiling:
                     </span>
                     <div className="flex-1 max-w-md h-4 bg-gray-900 border border-gray-700 rounded overflow-hidden">
                       <div
-                        className="h-full bg-gradient-to-r from-[var(--terminal-green)] to-[var(--terminal-blue)] transition-all duration-100"
+                        className="h-full bg-gradient-to-r from-[var(--terminal-green)] via-[var(--terminal-blue)] to-[var(--terminal-purple)] transition-all duration-100"
                         style={{
                           width: `${progressWidth}%`,
                           boxShadow: "0 0 10px var(--terminal-green)",
@@ -418,13 +731,10 @@ export default function BootSequence({ onComplete }: BootSequenceProps) {
             }
 
             // Handle memory test display
-            if (
-              line.type === "loading" &&
-              line.text.startsWith("Memory Test:")
-            ) {
+            if (line.type === "loading" && line.text.startsWith("RAM Test:")) {
               return (
                 <div key={index} className="text-[var(--terminal-orange)]">
-                  Memory Test: {memoryCount.toLocaleString()}KB
+                  RAM Test: {memoryCount.toLocaleString()}KB
                   {showMemoryTest && (
                     <span className="animate-pulse ml-2">▓</span>
                   )}
@@ -432,9 +742,36 @@ export default function BootSequence({ onComplete }: BootSequenceProps) {
               );
             }
 
+            // Handle coffee count display
+            if (
+              line.type === "loading" &&
+              line.text.includes("Counting coffees")
+            ) {
+              return (
+                <div
+                  key={index}
+                  className="text-[var(--terminal-orange)] flex items-center"
+                >
+                  {"  "}
+                  <CoffeeIcon
+                    size={14}
+                    color="var(--terminal-orange)"
+                    className="inline-block mx-0.5"
+                  />{" "}
+                  Counting coffees consumed: {coffeeCount.toLocaleString()}
+                  {showCoffeeCount && (
+                    <span className="animate-pulse ml-2">▓</span>
+                  )}
+                </div>
+              );
+            }
+
             return (
-              <div key={index} className={`${getLineColor(line.type)}`}>
-                {line.text || "\u00A0"}
+              <div
+                key={index}
+                className={`${getLineColor(line.type)} flex items-center flex-wrap`}
+              >
+                {renderTextWithIcons(line.text || "\u00A0")}
                 {/* Show cursor on the last typing line */}
                 {index === displayedLines.length - 1 &&
                   line.type === "typing" && (
@@ -462,23 +799,27 @@ export default function BootSequence({ onComplete }: BootSequenceProps) {
 
       {/* Skip hint */}
       {showSkipHint && !isComplete && (
-        <div className="absolute bottom-6 right-6 z-30 animate-fadeIn">
+        <div className="absolute bottom-14 right-4 md:bottom-14 md:right-6 z-30 animate-fadeIn">
           <button
             onClick={handleSkip}
-            className="font-mono text-xs text-gray-500 hover:text-[var(--terminal-green)] border border-gray-700 hover:border-[var(--terminal-green)] px-4 py-2 rounded transition-all duration-300 hover:shadow-[0_0_10px_rgba(0,255,136,0.3)]"
+            className="font-mono text-[10px] md:text-xs text-gray-500 hover:text-[var(--terminal-green)] border border-gray-700 hover:border-[var(--terminal-green)] px-3 py-1.5 md:px-4 md:py-2 rounded transition-all duration-300 hover:shadow-[0_0_10px_rgba(0,255,136,0.3)]"
           >
-            Press ESC or click to skip
+            Press ESC to skip (but you&apos;ll miss the fun)
           </button>
         </div>
       )}
 
       {/* Bottom status bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-8 bg-[#0a0a0a] border-t border-gray-800 flex items-center justify-between px-4 z-30">
-        <div className="font-mono text-[10px] text-gray-600">
-          AARIZ-BIOS v2.0.24
+      <div className="absolute bottom-0 left-0 right-0 h-8 bg-[#050505] border-t border-gray-800 flex items-center justify-between px-4 z-30">
+        <div className="font-mono text-[10px] text-gray-600 flex items-center gap-2">
+          <span className="text-[var(--terminal-green)]">●</span>
+          AARIZ-BIOS v3.14.159
         </div>
-        <div className="font-mono text-[10px] text-gray-600">
-          {new Date().toLocaleTimeString()}
+        <div className="font-mono text-[10px] text-gray-600 flex items-center gap-4">
+          <span className="flex items-center gap-1">
+            <CoffeeIcon size={12} color="currentColor" /> ∞
+          </span>
+          <span>{new Date().toLocaleTimeString()}</span>
         </div>
       </div>
 
@@ -511,7 +852,7 @@ export default function BootSequence({ onComplete }: BootSequenceProps) {
         }
 
         .animate-scanline {
-          animation: scanline 8s linear infinite;
+          animation: scanline 6s linear infinite;
         }
 
         .animate-fadeIn {

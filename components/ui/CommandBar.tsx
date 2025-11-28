@@ -293,16 +293,18 @@ export default function CommandBar() {
       {
         name: "intro",
         aliases: ["avatar", "greeting", "hello"],
-        description: "Replay the intro sequence",
+        description: "Replay the boot sequence",
         category: "system",
         action: () => {
           try {
-            sessionStorage.removeItem("portfolio-intro-seen");
+            sessionStorage.removeItem("portfolio-booted");
+            // Close command bar and reload
+            setIsOpen(false);
+            window.location.reload();
           } catch {
-            // Ignore
+            window.location.reload();
           }
-          setTimeout(() => window.location.reload(), 500);
-          return "Replaying intro... Say hello again! 👋";
+          return "Replaying boot sequence... Initializing AARIZ-BIOS 🖥️";
         },
       },
       {

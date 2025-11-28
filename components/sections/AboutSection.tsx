@@ -11,6 +11,13 @@ import {
 } from "../ui/ParallaxSection";
 import StaggeredGrid, { GridItem } from "../ui/StaggeredGrid";
 import AsciiArtHeading from "../ui/AsciiArtHeading";
+import {
+  FolderIcon,
+  LightningIcon,
+  GraduationIcon,
+  CoffeeIcon,
+  RocketIcon,
+} from "../ui/TerminalIcons";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -140,10 +147,26 @@ export default function AboutSection() {
   }, [animationsEnabled]);
 
   const stats = [
-    { label: "Projects", value: "10+", icon: "📁" },
-    { label: "Technologies", value: "15+", icon: "⚡" },
-    { label: "Year", value: "3rd", icon: "🎓" },
-    { label: "Coffees", value: "∞", icon: "☕" },
+    {
+      label: "Projects",
+      value: "10+",
+      icon: <FolderIcon size={20} color="var(--terminal-green)" />,
+    },
+    {
+      label: "Technologies",
+      value: "15+",
+      icon: <LightningIcon size={20} color="var(--terminal-orange)" />,
+    },
+    {
+      label: "Year",
+      value: "3rd",
+      icon: <GraduationIcon size={20} color="var(--terminal-purple)" />,
+    },
+    {
+      label: "Coffees",
+      value: "∞",
+      icon: <CoffeeIcon size={20} color="var(--terminal-blue)" />,
+    },
   ];
 
   return (
@@ -410,8 +433,13 @@ export default function AboutSection() {
                     <span className="text-white">{"}"}</span>
                   </div>
 
-                  <div className="mt-4 text-[var(--code-comment)]">
-                    {"// Always learning, always building 🚀"}
+                  <div className="mt-4 text-[var(--code-comment)] flex items-center gap-1">
+                    {"// Always learning, always building"}
+                    <RocketIcon
+                      size={14}
+                      color="var(--terminal-green)"
+                      className="inline-block"
+                    />
                   </div>
                 </div>
               </div>
