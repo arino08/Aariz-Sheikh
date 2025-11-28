@@ -359,7 +359,7 @@ export default function BootSequence({ onComplete }: BootSequenceProps) {
       type: "ascii",
       delay: 25,
     },
-    { text: "COMPLETE", type: "success", delay: 300 },
+    { text: "WAIT_FOR_INPUT", type: "success", delay: 0 },
   ]);
 
   // Main boot sequence logic
@@ -451,9 +451,8 @@ export default function BootSequence({ onComplete }: BootSequenceProps) {
         return;
       }
 
-      if (line.text === "COMPLETE") {
-        setIsComplete(true);
-        setTimeout(onComplete, line.delay);
+      if (line.text === "WAIT_FOR_INPUT") {
+        // Wait for user input - don't auto-complete
         return;
       }
 
@@ -483,7 +482,7 @@ export default function BootSequence({ onComplete }: BootSequenceProps) {
         });
 
         charIdx++;
-        const charDelay = line.type === "ascii" ? 2 : 4 + Math.random() * 6;
+        const charDelay = line.type === "ascii" ? 8 : 13 + Math.random() * 15;
         setTimeout(processLine, charDelay);
       } else {
         // Line complete, finalize it
