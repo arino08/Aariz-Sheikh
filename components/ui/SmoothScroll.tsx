@@ -91,7 +91,7 @@ export default function SmoothScroll({
       return;
     }
 
-    // Initialize Lenis
+    // Initialize Lenis with optimized settings
     const lenis = new Lenis({
       lerp,
       duration,
@@ -101,20 +101,45 @@ export default function SmoothScroll({
       smoothWheel,
       touchMultiplier,
       infinite,
+      syncTouch: false, // Disable sync touch for better mobile performance
+      autoRaf: false, // We'll handle RAF ourselves for better control
     });
 
     lenisRef.current = lenis;
 
-    // Connect Lenis to GSAP ScrollTrigger
-    lenis.on("scroll", ScrollTrigger.update);
+    // Connect Lenis to GSAP ScrollTrigger with throttling
+    let lastScrollUpdate = 0;
+    const scrollThrottle = 16; // ~60fps max
+
+    lenis.on("scroll", () => {
+      const now = performance.now();
+      if (now - lastScrollUpdate >= scrollThrottle) {
+        lastScrollUpdate = now;
+        ScrollTrigger.update();
+      }
+    });
+
+    // RAF callback for Lenis
+    const rafCallback = (time: number) => {
+      lenis.raf(time * 1000);
+    };
 
     // Add Lenis to GSAP ticker
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
+    gsap.ticker.add(rafCallback);
 
     // Disable GSAP's default lag smoothing
     gsap.ticker.lagSmoothing(0);
+
+    // Pause Lenis when tab is not visible for performance
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        lenis.stop();
+      } else {
+        lenis.start();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     // Handle anchor links
     const handleAnchorClick = (e: MouseEvent) => {
@@ -143,7 +168,8 @@ export default function SmoothScroll({
 
     return () => {
       document.removeEventListener("click", handleAnchorClick);
-      gsap.ticker.remove(lenis.raf);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      gsap.ticker.remove(rafCallback);
       lenis.destroy();
       lenisRef.current = null;
     };

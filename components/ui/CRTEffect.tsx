@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 interface CRTEffectProps {
   enabled?: boolean;
@@ -25,6 +25,8 @@ export default function CRTEffect({
 }: CRTEffectProps) {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [performanceMode, setPerformanceMode] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Check for reduced motion preference
@@ -39,7 +41,9 @@ export default function CRTEffect({
 
     // Check performance settings
     try {
-      const savedSettings = localStorage.getItem("portfolio-performance-settings");
+      const savedSettings = localStorage.getItem(
+        "portfolio-performance-settings",
+      );
       if (savedSettings) {
         const parsed = JSON.parse(savedSettings);
         if (parsed.enableAnimations === false) {
@@ -55,15 +59,27 @@ export default function CRTEffect({
     };
   }, []);
 
+  // Pause animations when tab is not visible for performance
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsVisible(!document.hidden);
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
   if (!enabled || reducedMotion || performanceMode) {
     return null;
   }
 
-  // Intensity multipliers
+  // Intensity multipliers - reduced for better performance
   const intensityValues = {
-    subtle: { scanline: 0.03, glow: 0.15, flicker: 0.005, noise: 0.02 },
-    medium: { scanline: 0.06, glow: 0.25, flicker: 0.01, noise: 0.04 },
-    strong: { scanline: 0.1, glow: 0.4, flicker: 0.02, noise: 0.06 },
+    subtle: { scanline: 0.02, glow: 0.1, flicker: 0.003, noise: 0.015 },
+    medium: { scanline: 0.04, glow: 0.18, flicker: 0.006, noise: 0.03 },
+    strong: { scanline: 0.08, glow: 0.3, flicker: 0.012, noise: 0.05 },
   };
 
   const values = intensityValues[intensity];
@@ -72,6 +88,7 @@ export default function CRTEffect({
     <>
       {/* CRT Effect Layers */}
       <div
+        ref={containerRef}
         className="crt-effect-container"
         style={{
           position: "fixed",
@@ -79,6 +96,8 @@ export default function CRTEffect({
           pointerEvents: "none",
           zIndex: 9999,
           overflow: "hidden",
+          willChange: "auto",
+          contain: "strict",
         }}
         aria-hidden="true"
       >
@@ -97,7 +116,11 @@ export default function CRTEffect({
                 transparent 2px
               )`,
               backgroundSize: "100% 2px",
-              animation: enableFlicker ? "scanlineMove 8s linear infinite" : "none",
+              animation:
+                enableFlicker && isVisible
+                  ? "scanlineMove 12s linear infinite"
+                  : "none",
+              animationPlayState: isVisible ? "running" : "paused",
             }}
           />
         )}
@@ -130,11 +153,14 @@ export default function CRTEffect({
               position: "absolute",
               inset: 0,
               boxShadow: `
-                inset 0 0 ${60 * values.glow}px rgba(0, 255, 136, ${values.glow * 0.3}),
-                inset 0 0 ${120 * values.glow}px rgba(0, 255, 136, ${values.glow * 0.15}),
-                inset 0 0 ${200 * values.glow}px rgba(0, 212, 255, ${values.glow * 0.1})
+                inset 0 0 ${40 * values.glow}px rgba(0, 255, 136, ${values.glow * 0.25}),
+                inset 0 0 ${80 * values.glow}px rgba(0, 255, 136, ${values.glow * 0.1})
               `,
-              animation: enableFlicker ? "glowPulse 4s ease-in-out infinite" : "none",
+              animation:
+                enableFlicker && isVisible
+                  ? "glowPulse 6s ease-in-out infinite"
+                  : "none",
+              animationPlayState: isVisible ? "running" : "paused",
             }}
           />
         )}
@@ -175,35 +201,39 @@ export default function CRTEffect({
         )}
 
         {/* Static noise overlay */}
-        {enableNoise && (
+        {enableNoise && isVisible && (
           <div
             className="crt-noise"
             style={{
               position: "absolute",
               inset: 0,
               opacity: values.noise,
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-              animation: enableFlicker ? "noiseShift 0.2s steps(10) infinite" : "none",
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 128 128' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+              animation: enableFlicker
+                ? "noiseShift 0.5s steps(5) infinite"
+                : "none",
+              animationPlayState: isVisible ? "running" : "paused",
             }}
           />
         )}
 
         {/* Flicker overlay */}
-        {enableFlicker && (
+        {enableFlicker && isVisible && (
           <div
             className="crt-flicker"
             style={{
               position: "absolute",
               inset: 0,
               background: "rgba(18, 16, 16, 0)",
-              animation: `flicker 0.15s infinite`,
-              opacity: values.flicker * 10,
+              animation: `flicker 0.3s infinite`,
+              opacity: values.flicker * 8,
+              animationPlayState: isVisible ? "running" : "paused",
             }}
           />
         )}
 
-        {/* Occasional screen glitch line */}
-        {enableFlicker && intensity !== "subtle" && (
+        {/* Occasional screen glitch line - only when visible and not subtle */}
+        {enableFlicker && intensity !== "subtle" && isVisible && (
           <div
             className="crt-glitch-line"
             style={{
@@ -212,9 +242,10 @@ export default function CRTEffect({
               right: 0,
               height: "2px",
               background: "rgba(0, 255, 136, 0.3)",
-              boxShadow: "0 0 10px rgba(0, 255, 136, 0.5)",
-              animation: "glitchLine 8s linear infinite",
+              boxShadow: "0 0 8px rgba(0, 255, 136, 0.4)",
+              animation: "glitchLine 12s linear infinite",
               opacity: 0,
+              animationPlayState: isVisible ? "running" : "paused",
             }}
           />
         )}
@@ -232,118 +263,47 @@ export default function CRTEffect({
         }
 
         @keyframes glowPulse {
-          0%, 100% {
+          0%,
+          100% {
             opacity: 1;
           }
           50% {
-            opacity: 0.95;
+            opacity: 0.97;
           }
         }
 
+        /* Simplified flicker animation for better performance */
         @keyframes flicker {
-          0% {
-            opacity: 0.27861;
-          }
-          5% {
-            opacity: 0.34769;
-          }
-          10% {
-            opacity: 0.23604;
-          }
-          15% {
-            opacity: 0.90626;
-          }
-          20% {
-            opacity: 0.18128;
+          0%,
+          100% {
+            opacity: 0.3;
           }
           25% {
-            opacity: 0.83891;
-          }
-          30% {
-            opacity: 0.65583;
-          }
-          35% {
-            opacity: 0.67807;
-          }
-          40% {
-            opacity: 0.26559;
-          }
-          45% {
-            opacity: 0.84693;
+            opacity: 0.5;
           }
           50% {
-            opacity: 0.96019;
-          }
-          55% {
-            opacity: 0.08594;
-          }
-          60% {
-            opacity: 0.20313;
-          }
-          65% {
-            opacity: 0.71988;
-          }
-          70% {
-            opacity: 0.53455;
+            opacity: 0.2;
           }
           75% {
-            opacity: 0.37288;
-          }
-          80% {
-            opacity: 0.71428;
-          }
-          85% {
-            opacity: 0.70419;
-          }
-          90% {
-            opacity: 0.7003;
-          }
-          95% {
-            opacity: 0.36108;
-          }
-          100% {
-            opacity: 0.24387;
+            opacity: 0.6;
           }
         }
 
+        /* Simplified noise shift for better performance */
         @keyframes noiseShift {
-          0% {
-            transform: translate(0, 0);
-          }
-          10% {
-            transform: translate(-1%, -1%);
-          }
-          20% {
-            transform: translate(1%, 1%);
-          }
-          30% {
-            transform: translate(-1%, 1%);
-          }
-          40% {
-            transform: translate(1%, -1%);
-          }
-          50% {
-            transform: translate(-1%, 0);
-          }
-          60% {
-            transform: translate(1%, 0);
-          }
-          70% {
-            transform: translate(0, 1%);
-          }
-          80% {
-            transform: translate(0, -1%);
-          }
-          90% {
-            transform: translate(1%, 1%);
-          }
+          0%,
           100% {
             transform: translate(0, 0);
+          }
+          50% {
+            transform: translate(-0.5%, -0.5%);
           }
         }
 
         @keyframes glitchLine {
-          0%, 94%, 100% {
+          0%,
+          94%,
+          100% {
             opacity: 0;
             top: 0;
           }
@@ -392,7 +352,9 @@ export default function CRTEffect({
 // Export a hook to toggle CRT effects
 export function useCRTEffect() {
   const [enabled, setEnabled] = useState(true);
-  const [intensity, setIntensity] = useState<"subtle" | "medium" | "strong">("subtle");
+  const [intensity, setIntensity] = useState<"subtle" | "medium" | "strong">(
+    "subtle",
+  );
 
   useEffect(() => {
     try {
@@ -407,18 +369,27 @@ export function useCRTEffect() {
     }
   }, []);
 
-  const updateSettings = (newEnabled: boolean, newIntensity: "subtle" | "medium" | "strong") => {
+  const updateSettings = (
+    newEnabled: boolean,
+    newIntensity: "subtle" | "medium" | "strong",
+  ) => {
     setEnabled(newEnabled);
     setIntensity(newIntensity);
     try {
       localStorage.setItem(
         "crt-effect-settings",
-        JSON.stringify({ enabled: newEnabled, intensity: newIntensity })
+        JSON.stringify({ enabled: newEnabled, intensity: newIntensity }),
       );
     } catch {
       // Ignore
     }
   };
 
-  return { enabled, intensity, setEnabled: (e: boolean) => updateSettings(e, intensity), setIntensity: (i: "subtle" | "medium" | "strong") => updateSettings(enabled, i) };
+  return {
+    enabled,
+    intensity,
+    setEnabled: (e: boolean) => updateSettings(e, intensity),
+    setIntensity: (i: "subtle" | "medium" | "strong") =>
+      updateSettings(enabled, i),
+  };
 }

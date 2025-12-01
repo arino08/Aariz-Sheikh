@@ -169,17 +169,47 @@ export default function SpriteGuide({
   const animationsEnabled = performanceSettings.enableAnimations;
   const glowEnabled = performanceSettings.enableGlow;
 
-  // Check if mobile
+  // Track tab visibility for pausing animations
+  const [isTabVisible, setIsTabVisible] = useState(true);
+
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    const handleVisibilityChange = () => {
+      setIsTabVisible(!document.hidden);
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
 
-  // Track scroll progress for pedestal
+  // Check if mobile - debounced for performance
   useEffect(() => {
+    let resizeTimeout: ReturnType<typeof setTimeout>;
+    const checkMobile = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        setIsMobile(window.innerWidth < 768);
+      }, 150);
+    };
+    setIsMobile(window.innerWidth < 768); // Initial check
+    window.addEventListener("resize", checkMobile);
+    return () => {
+      clearTimeout(resizeTimeout);
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
+
+  // Track scroll progress for pedestal - throttled for performance
+  useEffect(() => {
+    let lastScrollTime = 0;
+    const scrollThrottle = 100; // Only update every 100ms
+
     const handleScroll = () => {
+      const now = Date.now();
+      if (now - lastScrollTime < scrollThrottle) return;
+      lastScrollTime = now;
+
       const scrollTop = window.scrollY;
       const docHeight =
         document.documentElement.scrollHeight - window.innerHeight;
@@ -200,13 +230,14 @@ export default function SpriteGuide({
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  // Cursor blink
+  // Cursor blink - only when tab is visible
   useEffect(() => {
+    if (!isTabVisible) return;
     const interval = setInterval(() => setCursorVisible((prev) => !prev), 530);
     return () => clearInterval(interval);
-  }, []);
+  }, [isTabVisible]);
 
-  // Matrix spawn effect
+  // Matrix spawn effect - optimized with fewer updates
   useEffect(() => {
     if (!isSpawning || !animationsEnabled) {
       setIsSpawning(false);
@@ -214,10 +245,10 @@ export default function SpriteGuide({
       return;
     }
 
-    // Generate random matrix characters
+    // Generate random matrix characters - reduced count for performance
     const generateMatrixChars = () => {
       const chars: string[] = [];
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < 30; i++) {
         chars.push(
           MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)],
         );
@@ -227,27 +258,35 @@ export default function SpriteGuide({
 
     setMatrixChars(generateMatrixChars());
 
-    // Animate spawn progress
+    // Animate spawn progress - slower updates for performance
     let progress = 0;
     const interval = setInterval(() => {
-      progress += 2;
+      progress += 4; // Faster increments, fewer updates
       setSpawnProgress(progress);
-      setMatrixChars(generateMatrixChars());
+      if (progress % 12 === 0) {
+        setMatrixChars(generateMatrixChars()); // Update chars less frequently
+      }
 
       if (progress >= 100) {
         clearInterval(interval);
         setTimeout(() => {
           setIsSpawning(false);
-        }, 300);
+        }, 200);
       }
-    }, 50);
+    }, 80); // Slower interval
 
     return () => clearInterval(interval);
   }, [isSpawning, animationsEnabled]);
 
-  // Idle animation loop (subtle breathing effect) - more stable
+  // Idle animation loop (subtle breathing effect) - paused when tab not visible
   useEffect(() => {
-    if (!animationsEnabled || isMinimized || isPlayingAnimation || isSpawning)
+    if (
+      !animationsEnabled ||
+      isMinimized ||
+      isPlayingAnimation ||
+      isSpawning ||
+      !isTabVisible
+    )
       return;
 
     const frames = SPRITES.idle;
@@ -261,10 +300,16 @@ export default function SpriteGuide({
       // Ping-pong through frames
       if (frameIndex >= frames.length - 1) direction = -1;
       if (frameIndex <= 0) direction = 1;
-    }, 400); // Slower idle animation for stability
+    }, 300); // Even slower idle animation for better performance
 
     return () => clearInterval(interval);
-  }, [animationsEnabled, isMinimized, isPlayingAnimation, isSpawning]);
+  }, [
+    animationsEnabled,
+    isMinimized,
+    isPlayingAnimation,
+    isSpawning,
+    isTabVisible,
+  ]);
 
   // Play specific animation when section changes
   const playAnimation = useCallback(
@@ -297,6 +342,7 @@ export default function SpriteGuide({
       const maxLoops = animation === "wave" ? 2 : 1;
 
       const interval = setInterval(() => {
+        if (!isTabVisible) return; // Skip updates when tab not visible
         setCurrentFrame(frameIndex);
         frameIndex++;
 
@@ -311,18 +357,19 @@ export default function SpriteGuide({
             setCurrentFrame(0);
           }
         }
-      }, 180); // Slightly slower animation speed
+      }, 200); // Slightly slower animation speed for performance
 
       return () => clearInterval(interval);
     },
-    [animationsEnabled, isSpawning],
+    [animationsEnabled, isSpawning, isTabVisible],
   );
 
-  // Typing effect for messages
+  // Typing effect for messages - optimized typing speed
   const typeMessage = useCallback(
     (message: string) => {
-      if (!animationsEnabled) {
+      if (!animationsEnabled || !isTabVisible) {
         setCurrentMessage(message);
+        setIsTyping(false);
         return;
       }
 
@@ -331,6 +378,13 @@ export default function SpriteGuide({
 
       let index = 0;
       const interval = setInterval(() => {
+        if (!isTabVisible) {
+          // Complete immediately if tab becomes hidden
+          setCurrentMessage(message);
+          clearInterval(interval);
+          setIsTyping(false);
+          return;
+        }
         if (index < message.length) {
           setCurrentMessage(message.slice(0, index + 1));
           index++;
@@ -338,11 +392,11 @@ export default function SpriteGuide({
           clearInterval(interval);
           setIsTyping(false);
         }
-      }, 30);
+      }, 35); // Slightly slower typing for performance
 
       return () => clearInterval(interval);
     },
-    [animationsEnabled],
+    [animationsEnabled, isTabVisible],
   );
 
   // Update message and animation when section changes
@@ -357,16 +411,16 @@ export default function SpriteGuide({
     }
   }, [currentSection, messageIndex, playAnimation, typeMessage, isSpawning]);
 
-  // Cycle through messages - slower
+  // Cycle through messages - paused when tab not visible
   useEffect(() => {
-    if (isMinimized || isSpawning) return;
+    if (isMinimized || isSpawning || !isTabVisible) return;
 
     const interval = setInterval(() => {
       setMessageIndex((prev) => prev + 1);
-    }, 8000); // Slower message cycling
+    }, 10000); // Even slower message cycling for less updates
 
     return () => clearInterval(interval);
-  }, [isMinimized, currentSection, isSpawning]);
+  }, [isMinimized, currentSection, isSpawning, isTabVisible]);
 
   // Set up scroll triggers for each section - with debounce for stability
   useEffect(() => {
@@ -412,6 +466,12 @@ export default function SpriteGuide({
   // GSAP entrance animation
   useEffect(() => {
     if (!isVisible || !containerRef.current || !animationsEnabled) return;
+
+    // Skip animation if tab is not visible
+    if (!isTabVisible) {
+      gsap.set(containerRef.current, { opacity: 1, x: 0, scale: 1 });
+      return;
+    }
 
     gsap.fromTo(
       containerRef.current,

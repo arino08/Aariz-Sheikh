@@ -86,7 +86,7 @@ export default function LivePresence({
   const [isConnected, setIsConnected] = useState(false);
   const channelRef = useRef<RealtimeChannel | null>(null);
   const lastBroadcast = useRef(0);
-  const cursorThrottle = 50; // ms between cursor updates
+  const cursorThrottle = 150; // ms between cursor updates (increased for performance)
 
   // Position classes - top positions moved down to avoid overlapping nav buttons
   const positionClasses = {
@@ -220,9 +220,16 @@ export default function LivePresence({
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [showCursors, broadcastPosition]);
 
-  // Update section on scroll
+  // Update section on scroll - throttled for performance
   useEffect(() => {
+    let lastScrollUpdate = 0;
+    const scrollThrottle = 500; // Only update section every 500ms
+
     const handleScroll = () => {
+      const now = Date.now();
+      if (now - lastScrollUpdate < scrollThrottle) return;
+      lastScrollUpdate = now;
+
       if (channelRef.current) {
         channelRef.current.track({
           online_at: new Date().toISOString(),
@@ -235,20 +242,22 @@ export default function LivePresence({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Clean up stale cursors
+  // Clean up stale cursors - less frequent checks for performance
   useEffect(() => {
     const interval = setInterval(() => {
       const now = Date.now();
       setVisitors((prev) => {
         const next = new Map(prev);
+        let hasChanges = false;
         for (const [id, visitor] of next) {
           if (now - visitor.lastSeen > 5000) {
             next.delete(id);
+            hasChanges = true;
           }
         }
-        return next;
+        return hasChanges ? next : prev; // Only update if there are changes
       });
-    }, 2000);
+    }, 3000); // Reduced frequency from 2s to 3s
 
     return () => clearInterval(interval);
   }, []);
@@ -318,7 +327,7 @@ export default function LivePresence({
         Array.from(visitors.values()).map((visitor) => (
           <div
             key={visitor.id}
-            className="fixed pointer-events-none z-[60] transition-all duration-100 ease-out"
+            className="fixed pointer-events-none z-[60] transition-all duration-150 ease-out will-change-transform"
             style={{
               left: `${visitor.x}%`,
               top: `${visitor.y}%`,

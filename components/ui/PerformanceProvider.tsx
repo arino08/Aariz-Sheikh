@@ -65,7 +65,7 @@ const performanceLevelSettings: Record<
   },
   medium: {
     enableParticles: true,
-    particleCount: 500,
+    particleCount: 400,
     enableGrain: true,
     enableScanlines: true,
     enableGlow: true,
@@ -74,22 +74,22 @@ const performanceLevelSettings: Record<
     enableAnimations: true,
     enableAsciiAnimations: true,
     enable3DCanvas: true,
-    enableMatrixRain: true,
+    enableMatrixRain: false, // Disabled for better performance
     enableFloatingElements: true,
-    canvasQuality: 0.75,
-    targetFPS: 45,
+    canvasQuality: 0.65,
+    targetFPS: 40,
   },
   low: {
     enableParticles: true,
-    particleCount: 200,
+    particleCount: 150,
     enableGrain: false,
     enableScanlines: false,
-    enableGlow: true,
+    enableGlow: false, // Disable glow on low
     enableParallax: false,
     enableSmoothScroll: true,
     enableAnimations: true,
     enableAsciiAnimations: false,
-    enable3DCanvas: true,
+    enable3DCanvas: false, // Disable 3D on low
     enableMatrixRain: false,
     enableFloatingElements: false,
     canvasQuality: 0.5,
@@ -269,9 +269,9 @@ function getRecommendedLevel(
   // Score-based system
   let score = 100;
 
-  // Mobile devices get a penalty
+  // Mobile devices get a significant penalty - they need more optimization
   if (capabilities.isMobile) {
-    score -= 30;
+    score -= 40; // Increased from 30
   }
 
   // Low memory devices
@@ -280,30 +280,30 @@ function getRecommendedLevel(
     capabilities.deviceMemory !== undefined
   ) {
     if (capabilities.deviceMemory <= 2) {
-      score -= 40;
+      score -= 45; // Increased from 40
     } else if (capabilities.deviceMemory <= 4) {
-      score -= 20;
+      score -= 25; // Increased from 20
     }
   }
 
   // Low CPU cores
   if (capabilities.hardwareConcurrency) {
     if (capabilities.hardwareConcurrency <= 2) {
-      score -= 30;
+      score -= 35; // Increased from 30
     } else if (capabilities.hardwareConcurrency <= 4) {
-      score -= 15;
+      score -= 20; // Increased from 15
     }
   }
 
-  // Low power mode
+  // Low power mode - heavy penalty
   if (capabilities.isLowPowerMode) {
-    score -= 30;
+    score -= 40; // Increased from 30
   }
 
-  // Determine level based on score
-  if (score >= 80) return "high";
-  if (score >= 50) return "medium";
-  if (score >= 20) return "low";
+  // Determine level based on score - adjusted thresholds
+  if (score >= 85) return "high";
+  if (score >= 55) return "medium";
+  if (score >= 25) return "low";
   return "potato";
 }
 
@@ -350,14 +350,15 @@ export function PerformanceProvider({
         // Invalid JSON, use defaults
       }
     } else {
-      // First visit - always default to HIGH for best experience
-      // Users can manually adjust if needed
-      const levelSettings = performanceLevelSettings["high"];
+      // First visit - use recommended level based on device capabilities
+      // This provides better out-of-box experience especially on mobile
+      const recommendedLevel = getRecommendedLevel(capabilities);
+      const levelSettings = performanceLevelSettings[recommendedLevel];
       setSettings((prev) => ({
         ...prev,
         ...levelSettings,
         ...capabilities,
-        level: "high",
+        level: recommendedLevel,
       }));
     }
 

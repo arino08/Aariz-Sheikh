@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePerformance } from "./PerformanceProvider";
@@ -111,6 +111,20 @@ export default function AsciiDivider({
 
   const patternLines = useMemo(() => patterns[pattern], [pattern]);
 
+  // Track tab visibility for pausing animations
+  const [isTabVisible, setIsTabVisible] = useState(true);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsTabVisible(!document.hidden);
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
   // Height classes
   const heightClasses = {
     sm: "py-4",
@@ -182,21 +196,26 @@ export default function AsciiDivider({
     });
   }, [isVisible, effectiveAnimated, patternLines]);
 
-  // Horizontal scroll animation for animated patterns
+  // Horizontal scroll animation for animated patterns - optimized
   useEffect(() => {
-    if (!effectiveAnimated || !isVisible) return;
+    if (!effectiveAnimated || !isVisible || !isTabVisible) return;
 
     const duration = animationDurations[speed];
     let animationFrame: number;
     let startTime: number;
     let lastFrameTime = 0;
 
-    // Throttle to target FPS based on performance level
+    // Throttle to lower FPS for better performance
     const targetFPS =
-      settings.level === "high" ? 60 : settings.level === "medium" ? 30 : 20;
+      settings.level === "high" ? 30 : settings.level === "medium" ? 20 : 15;
     const frameInterval = 1000 / targetFPS;
 
     const animate = (timestamp: number) => {
+      // Stop if tab becomes hidden
+      if (!isTabVisible) {
+        return;
+      }
+
       if (!startTime) startTime = timestamp;
 
       // Throttle frame rate
@@ -222,60 +241,78 @@ export default function AsciiDivider({
         cancelAnimationFrame(animationFrame);
       }
     };
-  }, [effectiveAnimated, isVisible, speed, animationDurations, settings.level]);
+  }, [
+    effectiveAnimated,
+    isVisible,
+    isTabVisible,
+    speed,
+    animationDurations,
+    settings.level,
+  ]);
 
-  // Create repeated pattern line
-  const createRepeatedLine = (line: string): string => {
-    return line.repeat(repeatCount);
-  };
+  // Render a single animated line - memoized for performance
+  const renderLine = useCallback(
+    (line: string, index: number) => {
+      const isLineVisible = visibleLines.includes(index);
+      // Create repeated pattern line inline to avoid dependency issues
+      const repeatedLine = line.repeat(repeatCount);
 
-  // Render a single animated line
-  const renderLine = (line: string, index: number) => {
-    const isLineVisible = visibleLines.includes(index);
-    const repeatedLine = createRepeatedLine(line);
-
-    return (
-      <div
-        key={index}
-        className={`overflow-hidden w-full ${
-          settings.enableAnimations
-            ? `transition-all duration-500 ${
-                isLineVisible
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-2"
-              }`
-            : "opacity-100"
-        }`}
-        style={{
-          transitionDelay: settings.enableAnimations
-            ? `${index * 50}ms`
-            : "0ms",
-        }}
-      >
+      return (
         <div
-          className="whitespace-nowrap"
+          key={index}
+          className={`overflow-hidden w-full ${
+            settings.enableAnimations
+              ? `transition-all duration-500 ${
+                  isLineVisible
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-2"
+                }`
+              : "opacity-100"
+          }`}
           style={{
-            transform: effectiveAnimated
-              ? `translateX(-${scrollOffset}%)`
-              : "none",
-            willChange: effectiveAnimated ? "transform" : "auto",
+            transitionDelay: settings.enableAnimations
+              ? `${index * 50}ms`
+              : "0ms",
+            contain: "layout style",
           }}
         >
-          <pre
-            className="whitespace-pre font-mono text-[10px] md:text-xs leading-tight inline-block"
+          <div
+            className="whitespace-nowrap"
             style={{
-              color: color,
-              textShadow: effectiveGlow
-                ? `0 0 5px ${color}, 0 0 10px ${color}40`
-                : "none",
+              transform:
+                effectiveAnimated && isTabVisible
+                  ? `translateX(-${scrollOffset}%)`
+                  : "none",
+              willChange:
+                effectiveAnimated && isTabVisible ? "transform" : "auto",
             }}
           >
-            {repeatedLine}
-          </pre>
+            <pre
+              className="whitespace-pre font-mono text-[10px] md:text-xs leading-tight inline-block"
+              style={{
+                color: color,
+                textShadow: effectiveGlow
+                  ? `0 0 4px ${color}, 0 0 8px ${color}30`
+                  : "none",
+              }}
+            >
+              {repeatedLine}
+            </pre>
+          </div>
         </div>
-      </div>
-    );
-  };
+      );
+    },
+    [
+      visibleLines,
+      settings.enableAnimations,
+      effectiveAnimated,
+      isTabVisible,
+      scrollOffset,
+      color,
+      effectiveGlow,
+      repeatCount,
+    ],
+  );
 
   return (
     <div
@@ -286,6 +323,9 @@ export default function AsciiDivider({
         marginLeft: "calc(-50vw + 50%)",
         marginRight: "calc(-50vw + 50%)",
         width: "100vw",
+        contentVisibility: "auto",
+        containIntrinsicSize:
+          height === "sm" ? "0 64px" : height === "md" ? "0 128px" : "0 192px",
       }}
     >
       {/* Background glow effect */}

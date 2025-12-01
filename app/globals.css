@@ -88,6 +88,76 @@ body {
     overflow-x: hidden;
 }
 
+/* ===== PERFORMANCE OPTIMIZATIONS ===== */
+
+/* Content visibility for off-screen sections - improves initial render */
+.perf-section {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 500px;
+}
+
+/* GPU acceleration hints for animated elements */
+.gpu-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform;
+}
+
+/* Reduce paint areas for fixed elements */
+.fixed-optimized {
+    contain: layout style paint;
+    isolation: isolate;
+}
+
+/* Optimize animations when tab is not visible */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Pause animations when page is not visible (via JS class toggle) */
+.tab-hidden *,
+.tab-hidden *::before,
+.tab-hidden *::after {
+    animation-play-state: paused !important;
+}
+
+/* Optimize text rendering for terminal fonts */
+.font-mono {
+    text-rendering: optimizeSpeed;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Reduce box-shadow complexity on mobile for better performance */
+@media (max-width: 768px) {
+    .shadow-optimized {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    /* Disable blur effects on mobile for performance */
+    .backdrop-blur-sm,
+    .backdrop-blur {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background-color: rgba(13, 17, 23, 0.95) !important;
+    }
+}
+
+/* Optimize scrolling performance */
+.scroll-container {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+/* ===== END PERFORMANCE OPTIMIZATIONS ===== */
+
 /* Custom utilities */
 .font-mono {
     font-family: var(--font-jetbrains-mono), "Courier New", monospace;

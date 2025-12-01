@@ -507,6 +507,30 @@ export default function CommandBar() {
     }
   }, [isOpen]);
 
+  // Lock body scroll and stop Lenis when command bar is open
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+
+      // Stop Lenis smooth scroll to prevent it from hijacking scroll events
+      const lenis = (
+        window as Window & { lenis?: { stop: () => void; start: () => void } }
+      ).lenis;
+      if (lenis) {
+        lenis.stop();
+      }
+
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        // Restart Lenis when command bar closes
+        if (lenis) {
+          lenis.start();
+        }
+      };
+    }
+  }, [isOpen]);
+
   // Keyboard shortcut to open (Ctrl+Space)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -732,7 +756,10 @@ export default function CommandBar() {
   }
 
   return (
-    <div className="fixed inset-0 z-[9995] flex items-start justify-center pt-[15vh]">
+    <div
+      className="fixed inset-0 z-[9995] flex items-start justify-center pt-[15vh] overflow-hidden"
+      onWheelCapture={(e) => e.stopPropagation()}
+    >
       {/* Backdrop */}
       <div
         ref={backdropRef}
@@ -743,7 +770,7 @@ export default function CommandBar() {
       {/* Command bar container */}
       <div
         ref={containerRef}
-        className={`relative w-full max-w-2xl mx-4 bg-[#0d1117] border border-[var(--terminal-green)]/30 rounded-2xl overflow-hidden shadow-2xl ${
+        className={`relative w-full max-w-2xl mx-4 bg-[#0d1117] border border-[var(--terminal-green)]/30 rounded-2xl shadow-2xl max-h-[70vh] flex flex-col overflow-hidden ${
           glitchEffect ? "animate-glitch" : ""
         }`}
         style={{
@@ -778,7 +805,8 @@ export default function CommandBar() {
         {history.length > 0 && (
           <div
             ref={historyRef}
-            className="max-h-48 overflow-y-auto border-b border-gray-800 custom-scrollbar"
+            className="flex-1 min-h-0 overflow-y-auto border-b border-gray-800 custom-scrollbar"
+            style={{ overscrollBehavior: "contain" }}
           >
             <div className="p-4 space-y-3 font-mono text-xs">
               {history.slice(-5).map((entry, i) => (
@@ -830,7 +858,10 @@ export default function CommandBar() {
 
         {/* Suggestions */}
         {suggestions.length > 0 && (
-          <div className="border-t border-gray-800 max-h-72 overflow-y-auto custom-scrollbar">
+          <div
+            className="flex-shrink-0 border-t border-gray-800 max-h-72 overflow-y-auto custom-scrollbar"
+            style={{ overscrollBehavior: "contain" }}
+          >
             {suggestions.map((cmd, i) => (
               <button
                 key={cmd.name}

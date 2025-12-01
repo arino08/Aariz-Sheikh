@@ -35,6 +35,21 @@ export default function ClientWrapper({ children }: ClientWrapperProps) {
       setShouldShowBoot(true);
       setShowBootSequence(true);
     }
+
+    // Performance optimization: add/remove class when tab visibility changes
+    // This allows CSS to pause animations when tab is not visible
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        document.body.classList.add("tab-hidden");
+      } else {
+        document.body.classList.remove("tab-hidden");
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
 
   const handleBootComplete = useCallback(() => {
