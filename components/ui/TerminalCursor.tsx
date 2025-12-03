@@ -36,6 +36,70 @@ export default function TerminalCursor() {
   const lastParticleTime = useRef(0);
   const lastPosition = useRef({ x: 0, y: 0 });
 
+  // Theme color tracking for trail particles
+  const themeColorRef = useRef({ r: 0, g: 255, b: 136 }); // Default green #00ff88
+
+  // Helper function to parse hex color to RGB
+  const hexToRgb = useCallback(
+    (hex: string): { r: number; g: number; b: number } => {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      if (result) {
+        return {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16),
+        };
+      }
+      return { r: 0, g: 255, b: 136 }; // Default green
+    },
+    [],
+  );
+
+  // Update theme color from CSS variable
+  const updateThemeColor = useCallback(() => {
+    const computedStyle = getComputedStyle(document.documentElement);
+    const themeColor = computedStyle
+      .getPropertyValue("--terminal-green")
+      .trim();
+    if (themeColor) {
+      themeColorRef.current = hexToRgb(themeColor);
+    }
+  }, [hexToRgb]);
+
+  // Listen for theme changes
+  useEffect(() => {
+    updateThemeColor();
+
+    // Create a MutationObserver to watch for style changes on the root element
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (
+          mutation.type === "attributes" &&
+          mutation.attributeName === "style"
+        ) {
+          updateThemeColor();
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["style"],
+    });
+
+    // Also listen for class changes that might affect theme
+    window.addEventListener("themechange", updateThemeColor);
+
+    // Poll for changes as a fallback (some theme changes might not trigger mutation)
+    const intervalId = setInterval(updateThemeColor, 500);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("themechange", updateThemeColor);
+      clearInterval(intervalId);
+    };
+  }, [updateThemeColor]);
+
   // Detect touch device
   useEffect(() => {
     const checkTouch = () => {
@@ -171,11 +235,11 @@ export default function TerminalCursor() {
       const dy = positionRef.current.y - lastPosition.current.y;
       const distance = Math.sqrt(dx * dx + dy * dy);
 
-      // Spawn particles based on movement - more particles for disintegration effect
+      // Spawn particles based on movement
       const now = Date.now();
-      if (distance > 2 && now - lastParticleTime.current > 12) {
-        // Spawn 3-6 particles for denser trail
-        const particleCount = Math.min(Math.floor(distance / 2) + 2, 6);
+      if (distance > 3 && now - lastParticleTime.current > 18) {
+        // Spawn 2-4 particles for subtle trail
+        const particleCount = Math.min(Math.floor(distance / 3) + 1, 4);
         for (let i = 0; i < particleCount; i++) {
           // Spawn particles slightly behind cursor for trailing effect
           const trailOffset = i * 0.15;
@@ -236,10 +300,13 @@ export default function TerminalCursor() {
         ctx.save();
         ctx.imageSmoothingEnabled = false; // Crisp pixels
 
-        // Draw main pixel square
-        const green = Math.floor(136 + 119 * lifeRatio); // 136-255
-        const blue = Math.floor(68 + 68 * lifeRatio); // 68-136
-        ctx.fillStyle = `rgba(0, ${green}, ${blue}, ${particle.opacity})`;
+        // Draw main pixel square - use theme color
+        const { r: baseR, g: baseG, b: baseB } = themeColorRef.current;
+        // Interpolate color intensity based on particle life
+        const r = Math.floor(baseR * (0.5 + 0.5 * lifeRatio));
+        const g = Math.floor(baseG * (0.5 + 0.5 * lifeRatio));
+        const b = Math.floor(baseB * (0.5 + 0.5 * lifeRatio));
+        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${particle.opacity})`;
 
         // Main pixel block
         ctx.fillRect(pixelX, pixelY, currentSize, currentSize);
@@ -252,16 +319,16 @@ export default function TerminalCursor() {
           }
         }
 
-        // Glow effect (subtle)
-        ctx.shadowColor = `rgba(0, 255, 136, ${particle.opacity * 0.4})`;
+        // Glow effect (subtle) - use theme color
+        ctx.shadowColor = `rgba(${baseR}, ${baseG}, ${baseB}, ${particle.opacity * 0.4})`;
         ctx.shadowBlur = currentSize + 2;
-        ctx.fillStyle = `rgba(0, ${green}, ${blue}, ${particle.opacity * 0.3})`;
+        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${particle.opacity * 0.3})`;
         ctx.fillRect(pixelX - 1, pixelY - 1, currentSize + 2, currentSize + 2);
 
         // Add "breaking apart" sub-pixels around dying particles
         if (lifeRatio < 0.5 && currentSize > 2) {
           const subPixelCount = Math.floor((1 - lifeRatio) * 4);
-          ctx.fillStyle = `rgba(0, ${green}, ${blue}, ${particle.opacity * 0.5})`;
+          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${particle.opacity * 0.5})`;
           for (let i = 0; i < subPixelCount; i++) {
             const offsetX = Math.floor((Math.random() - 0.5) * 6);
             const offsetY = Math.floor((Math.random() - 0.5) * 6);
@@ -269,9 +336,12 @@ export default function TerminalCursor() {
           }
         }
 
-        // Bright core on newer particles
+        // Bright core on newer particles - blend with white for brightness
         if (lifeRatio > 0.7) {
-          ctx.fillStyle = `rgba(150, 255, 200, ${particle.opacity * 0.6})`;
+          const coreR = Math.min(255, baseR + 100);
+          const coreG = Math.min(255, baseG + 50);
+          const coreB = Math.min(255, baseB + 64);
+          ctx.fillStyle = `rgba(${coreR}, ${coreG}, ${coreB}, ${particle.opacity * 0.6})`;
           const coreSize = Math.max(1, Math.floor(currentSize * 0.4));
           ctx.fillRect(
             pixelX + Math.floor((currentSize - coreSize) / 2),
@@ -286,9 +356,9 @@ export default function TerminalCursor() {
         return true;
       });
 
-      // Limit particles (higher limit for denser effect)
-      if (particlesRef.current.length > 150) {
-        particlesRef.current = particlesRef.current.slice(-150);
+      // Limit particles
+      if (particlesRef.current.length > 100) {
+        particlesRef.current = particlesRef.current.slice(-100);
       }
 
       rafRef.current = requestAnimationFrame(animate);
@@ -452,7 +522,7 @@ export default function TerminalCursor() {
           height: "80px",
           marginLeft: "-40px",
           marginTop: "-40px",
-          background: `radial-gradient(circle, rgba(0,255,136,${isClicking ? 0.35 : 0.2}) 0%, transparent 70%)`,
+          background: `radial-gradient(circle, color-mix(in srgb, var(--terminal-green) ${isClicking ? 35 : 20}%, transparent) 0%, transparent 70%)`,
           filter: "blur(10px)",
         }}
         aria-hidden="true"
@@ -509,7 +579,7 @@ export default function TerminalCursor() {
             textShadow: `
               0 0 5px var(--terminal-green),
               0 0 10px var(--terminal-green),
-              0 0 20px rgba(0,255,136,0.5)
+              0 0 20px color-mix(in srgb, var(--terminal-green) 50%, transparent)
             `,
             display: "inline-block",
             transform: `scale(${isClicking ? 0.7 : 1}) ${cursorMode === "pointer" ? "rotate(-45deg)" : ""}`,
@@ -532,7 +602,8 @@ export default function TerminalCursor() {
               transform: `translate(-50%, -50%) scale(${isClicking ? 0.8 : 1})`,
               border: "2px solid var(--terminal-green)",
               opacity: 0.5,
-              boxShadow: "0 0 15px rgba(0,255,136,0.3)",
+              boxShadow:
+                "0 0 15px color-mix(in srgb, var(--terminal-green) 30%, transparent)",
               transition: "all 0.2s ease-out",
               animation: "cursorRingPulse 2s ease-in-out infinite",
               imageRendering: "pixelated",
